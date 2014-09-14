@@ -1,28 +1,4 @@
-##
-# Your previous /Users/fx/.bash_profile file was backed up as /Users/fx/.bash_profile.macports-saved_2010-03-15_at_19:44:49
-##
 
-# MacPorts Installer addition on 2010-03-15_at_19:44:49: adding an appropriate PATH variable for use with MacPorts.
-export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-# Finished adapting your PATH environment variable for use with MacPorts.
-
-
-##
-# Your previous /Users/fx/.bash_profile file was backed up as /Users/fx/.bash_profile.macports-saved_2014-03-21_at_20:06:49
-##
-
-# MacPorts Installer addition on 2014-03-21_at_20:06:49: adding an appropriate PATH variable for use with MacPorts.
-export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-# Finished adapting your PATH environment variable for use with MacPorts.
-
-
-##
-# Your previous /Users/fx/.bash_profile file was backed up as /Users/fx/.bash_profile.macports-saved_2014-03-22_at_16:00:28
-##
-
-# MacPorts Installer addition on 2014-03-22_at_16:00:28: adding an appropriate PATH variable for use with MacPorts.
-export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-# Finished adapting your PATH environment variable for use with MacPorts.
 alias sublime='/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl'
 export EDITOR="sublime -w"
 
@@ -35,5 +11,5 @@ PS1='[\u@\h \w]\$ '
 
 export VAGRANT_DEFAULT_PROVIDER=virtualbox
 
-alias ansible-env-setup='export ANSIBLE_HOSTS=~/fxgit/ansible/ansible-hosts'
+alias ansible-env-setup="export ANSIBLE_HOSTS=${HOME}/ansible/ansible-hosts"
 alias vim="/usr/local/Cellar/vim/7.4.430/bin/vim"
