@@ -1,0 +1,51 @@
+" use vim-plug to manage the plugins
+" Install vim-plug from : https://github.com/junegunn/vim-plug/
+"
+"  mkdir -p ~/.vim/autoload
+"  curl -fLo ~/.vim/autoload/plug.vim \
+"https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+call plug#begin()
+Plug 'tpope/vim-sensible'
+Plug 'chase/vim-ansible-yaml'
+Plug 'scrooloose/syntastic'
+call plug#end()
+"
+"
+"
+
+set nocompatible 
+syntax enable
+set showmode " always show mode
+set hlsearch
+set backspace =2
+set visualbell
+set cursorline
+set smartindent
+set number
+set ruler
+set showmatch
+set expandtab
+set smarttab autoindent
+set tabstop=4 
+set shiftwidth=4 
+set softtabstop=4 
+set shiftround 
+
+nnoremap <F5> :set invpaste paste?<Enter>
+imap <F5> <C-O><F5>
+set pastetoggle=<F5>
+
+highlight Comment ctermfg=gray guifg=gray
+"make ctrl+c ctrl+v work in gvim
+nmap <C-V> "+gP
+imap <C-V> <ESC><C-V>i
+vmap <C-C> "+y 
+
+
+" execute the script
+command R !./%
+" execute as a python script
+command P ! python ./%
+
+
