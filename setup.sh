@@ -19,12 +19,22 @@ if [ "$(uname -s)" == "Darwin" ];then
     flavor=osx
 fi
 
-cd $flavor
-# ssh_config contains some hostnames which I'd prefer not to share
-gpg -o ssh_config -d ssh_config.gpg
-symlink bash_profile ${HOME}/.bash_profile
-symlink Xmodmap ${HOME}/.Xmodmap
-symlink ssh_config ${HOME}/.ssh/config
+echo "Setting up shared dotfiles"
+cd shared
+symlink vimrc ${HOME}/.vimrc
 cd ..
+
+if [ -d $flavor ]; then
+    echo "Setting up $flavor specific dotfiles"
+    cd $flavor
+    # ssh_config contains some hostnames which I'd prefer not to share
+    gpg -o ssh_config -d ssh_config.gpg
+    symlink bash_profile ${HOME}/.bash_profile
+    symlink Xmodmap ${HOME}/.Xmodmap
+    symlink ssh_config ${HOME}/.ssh/config
+    cd ..
+else
+    echo "The directory $flavor does not exist. Skipping."
+fi
 
 echo "All done"
