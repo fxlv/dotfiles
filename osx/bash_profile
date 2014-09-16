@@ -1,6 +1,7 @@
 
 alias sublime='/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl'
-export EDITOR="sublime -w"
+#export EDITOR="sublime -w"
+export EDITOR="vim"
 
 
 HISTFILESIZE=8000
@@ -13,3 +14,7 @@ export VAGRANT_DEFAULT_PROVIDER=virtualbox
 
 alias ansible-env-setup="export ANSIBLE_HOSTS=${HOME}/ansible/ansible-hosts"
 alias vim="/usr/local/Cellar/vim/7.4.430/bin/vim"
+
+
+source $HOME/.bashrc
+
