@@ -1,0 +1,24 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: deploy .vimrc
+      template: src=../vim/vimrc dest={{ansible_env.HOME}}/.vimrc
+    - name: make sure .vim/indent exists
+      file: path={{ansible_env.HOME}}/.vim/indent state=directory
+    - name: deploy vim yml indent rules
+      file: src={{ansible_env.HOME}}/.vim/plugged/vim-ansible-yaml/indent/ansible.vim dest={{ansible_env.HOME}}/.vim/indent/yaml.vim state=link
+
+    - name: deploy .ssh/config
+      copy: src=../ssh/config dest={{ansible_env.HOME}}/.ssh/config 
+
+    - name: deploy bash config files
+      template: src=../bash/bash_profile dest={{ansible_env.HOME}}/.bash_profile
+    - name: deploy bash config files
+      template: src=../bash/bash_mac dest={{ansible_env.HOME}}/.bash_mac
+      when: ansible_system == "Darwin"
+    - name: deploy Xmodmap
+      template: src=../osx/Xmodmap dest={{ansible_env.HOME}}/.Xmodmap
+      when: ansible_system == "Darwin"
+        
+    
