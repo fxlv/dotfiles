@@ -11,6 +11,11 @@ call plug#begin()
 Plug 'tpope/vim-sensible'
 Plug 'chase/vim-ansible-yaml'
 Plug 'scrooloose/syntastic'
+" install flake8 in order to use vim-flake8
+" for example: pip install flake8
+" flake8 can then be invoked by 'F7' 
+Plug 'nvie/vim-flake8'
+
 call plug#end()
 "
 "
@@ -22,11 +27,14 @@ set showmode " always show mode
 set hlsearch
 set backspace =2
 set visualbell
+highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+match OverLength /\%81v.\+/
 set cursorline
 set smartindent
 set number
 set ruler
 set showmatch
+set textwidth=80
 set expandtab
 set smarttab autoindent
 set tabstop=4 
@@ -49,5 +57,4 @@ vmap <C-C> "+y
 command R !./%
 " execute as a python script
 command P ! python ./%
-
 
