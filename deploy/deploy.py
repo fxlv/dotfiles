@@ -14,25 +14,37 @@ else:
     print "Unsupported platform"
     sys.exit(1)
 
-print "Platform:",platform
+print "Platform:", platform
+
 
 class Dotfile:
 
-    def __init__(self, name, src, dst):
+    def __init__(self, name, src, dst, compile_dotfile_script=None):
         self.name = name
         self.src = src
         self.dst = dst
         cwd = os.getcwd()
         self.dotfiles_directory = os.path.dirname(cwd)
         self.home = os.environ.get("HOME")
+        # prepend 'dotfiles_directory' to the dotfile source
+        self.src = "{0}/{1}".format(self.dotfiles_directory, self.src)
         self.debug = True
+        self.compile_dotfile_script = compile_dotfile_script
+
+    def compile_dotfile(self):
+        if self.debug: 
+            print "Compiling {0} dotfile by executing {1}".format(self.name, self.compile_dotfile_script)
+        dotfile_path = os.path.dirname(self.src)
+        os.chdir(dotfile_path)
+        compile_script = "./{0}".format(self.compile_dotfile_script)
+        os.system(compile_script)
 
     def __repr__(self):
         return "Dotfile: {0}".format(self.name)
-    
+ 
     def __str__(self):
         return self.name
-    
+   
     def exists(self):
         "Check if the destination file exists"
         if os.path.exists(self.dst):
@@ -58,13 +70,12 @@ class Dotfile:
 
 
     def deploy(self):
+        if self.compile_dotfile_script:
+            self.compile_dotfile()
         # we can handle both relative and absolute path in home directory
         if self.home not in self.dst:
             if self.debug: print "DEBUG: Appending {0} to {1}".format(self.home, self.dst)
             self.dst = "{0}/{1}".format(self.home, self.dst)
-        # prepend 'dotfiles_directory' to the dotfile source
-        self.src = "{0}/{1}".format(self.dotfiles_directory, self.src)
-       
         # check if the dotfile is already deployed
         if self.is_deployed():
             print "Dotfile {0} is already deployed.".format(self.name)
@@ -84,6 +95,9 @@ class Dotfile:
 if __name__ == "__main__":
     vimrc = Dotfile("virmc", "vim/vimrc", ".vimrc")
     vimrc.deploy()
+    ssh_config = Dotfile("ssh config", "ssh/ssh_config", ".ssh/config",
+                         compile_dotfile_script="compile.sh")
+    ssh_config.deploy()
     if platform == "OSX":
         xmodmap = Dotfile("Xmodmap", "osx/Xmodmap", ".Xmodmap")
         xmodmap.deploy()
