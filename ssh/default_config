@@ -1,2 +1,6 @@
 ForwardAgent yes
 
+Host localhost
+UserKnownHostsFile=/dev/null
+StrictHostKeyChecking no
+
