@@ -1,0 +1,15 @@
+if [ -f ~/.bash_aliases ]; 
+then
+    . ~/.bash_aliases
+fi
+
+set -o ignoreeof
+
+HISTFILESIZE=8000
+HISTSIZE=8000
+HISTTIMEFORMAT="[ %d.%m.%y %T ] "
+HISTCONTROL=ignoredups
+PS1='[\u@\h \w]\$ '
+
+export HISTFILESIZE HISTSIZE HISTTIMEFORMAT PS1
+export EDITOR=vim
