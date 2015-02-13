@@ -6,6 +6,7 @@ do
     if file $hostsfile|grep -q ASCII; then
         echo "Adding $hostsfile to ssh_config"
         cat $hostsfile >> ssh_config
+        chmod 640 ssh_config
     else
         echo "Skipping non-decrypted file $hostsfile"
     fi
