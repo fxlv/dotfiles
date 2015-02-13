@@ -4,7 +4,15 @@ fi
 
 
 
+
 echo ".bash_profile loaded"
 source $HOME/.bashrc
 ####
+if [ -e /etc/debian_version ]; then
+    if [ -e /usr/games/fortune ]; then
+        /usr/games/fortune
+    fi
+fi
+
 uptime
+
