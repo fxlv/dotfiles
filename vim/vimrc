@@ -15,6 +15,9 @@ Plug 'scrooloose/syntastic'
 " for example: pip install flake8
 " flake8 can then be invoked by 'F7' 
 Plug 'nvie/vim-flake8'
+"
+Plug 'rodjek/vim-puppet'
+Plug 'tpope/vim-fugitive'
 
 call plug#end()
 "
