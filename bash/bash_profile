@@ -1,4 +1,3 @@
-#piizda
 # common settings
 # big hist file is good for lazy (or forgetful) admins
 HISTFILESIZE=10000
@@ -9,29 +8,19 @@ HISTTIMEFORMAT="[ %d.%m.%y %T ] "
 HISTCONTROL=ignoredups
 PS1='[\u@\h \w]\$ '
 
+export HISTFILESIZE HISTSIZE HISTTIMEFORMAT PS1
 # some basic env variables
 export VAGRANT_DEFAULT_PROVIDER=virtualbox
 export EDITOR="vim"
 
-# dcfldd is waaaay cooles than dd
-if which dcfldd > /dev/null; then
-    alias dd="dcfldd"
-fi
 source $HOME/.bashrc
 
 if [ -e $HOME/.bash_mac ]; then
     source $HOME/.bash_mac
 fi
 
-#
-#
-#
-if ! diff -q .bash_profile ~/github/dotfiles/bash/bash_profile > /dev/null; then
-    alias sync_bash_repo="cp .bash_profile ~/github/dotfiles/bash/bash_profile"
-    echo
-    echo "It appears you have changed your .bash_profile without updating dotfiles repo."
-    echo "Might I suggest you update your dotfiles repo sir?"
-    echo
-    echo "Just issue 'sync_bash_repo' command and then commit your changes."
-    echo
+if [ -f ~/.bash_aliases ]; 
+then
+    . ~/.bash_aliases
 fi
+echo ".bash_profile loaded"

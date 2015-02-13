@@ -1,1 +1,6 @@
 alias iptls='sudo iptables -L -v -n --line-numbers'
+# dcfldd is waaaay cooler than dd
+if which dcfldd > /dev/null; then
+    alias dd="dcfldd"
+fi
+alias ll='/bin/ls -lashG'
