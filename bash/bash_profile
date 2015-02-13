@@ -10,9 +10,10 @@ source $HOME/.bashrc
 ####
 if [ -e /etc/debian_version ]; then
     if [ -e /usr/games/fortune ]; then
+        echo
         /usr/games/fortune
     fi
 fi
-
+echo
 uptime
 
