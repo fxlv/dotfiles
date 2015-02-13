@@ -95,11 +95,19 @@ class Dotfile:
 if __name__ == "__main__":
     vimrc = Dotfile("virmc", "vim/vimrc", ".vimrc")
     vimrc.deploy()
+    bash_profile = Dotfile("bash_profile", "bash/bash_profile", ".bash_profile")
+    bash_profile.deploy()
+    bashrc = Dotfile("bashrc", "bash/bashrc", ".bashrc")
+    bashrc.deploy()
+    bash_aliases = Dotfile("bash_aliases", "bash/bash_aliases", ".bash_aliases")
+    bash_aliases.deploy()
     ssh_config = Dotfile("ssh config", "ssh/ssh_config", ".ssh/config",
                          compile_dotfile_script="compile.sh")
     ssh_config.deploy()
     if platform == "OSX":
         xmodmap = Dotfile("Xmodmap", "osx/Xmodmap", ".Xmodmap")
         xmodmap.deploy()
+        bash_mac = Dotfile("bash_mac", "bash/bash_mac", ".bash_mac")
+        bash_mac.deploy()
 
 

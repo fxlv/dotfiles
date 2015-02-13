@@ -1,4 +1,26 @@
-echo ".bashrc loaded"
 if [ -e $HOME/.bash_aliases ]; then
     source $HOME/.bash_aliases
 fi
+if [ -e $HOME/.bash_mac ]; then
+    source $HOME/.bash_mac
+    echo ".bash_mac loaded"
+fi
+if [ -e $HOME/.bash_mac ]; then
+    source $HOME/.bash_mac
+fi
+
+# common settings
+# big hist file is good for lazy (or forgetful) admins
+HISTFILESIZE=10000
+HISTSIZE=10000
+# add timestamps to history entries
+HISTTIMEFORMAT="[ %d.%m.%y %T ] "
+# no point in saving dupes
+HISTCONTROL=ignoredups
+PS1='[\u@\h \w]\$ '
+
+export HISTFILESIZE HISTSIZE HISTTIMEFORMAT PS1
+# some basic env variables
+export VAGRANT_DEFAULT_PROVIDER=virtualbox
+export EDITOR="vim"
+echo ".bashrc loaded"
