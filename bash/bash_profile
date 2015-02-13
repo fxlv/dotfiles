@@ -22,6 +22,11 @@ source $HOME/.bashrc
 if [ -e $HOME/.bash_mac ]; then
     source $HOME/.bash_mac
 fi
+if [ -e $HOME/.ansible_environment ]; then
+    source $HOME/.ansible_environment
+fi
+
+
 
 #
 #
