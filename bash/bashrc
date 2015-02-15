@@ -23,4 +23,7 @@ export HISTFILESIZE HISTSIZE HISTTIMEFORMAT PS1
 # some basic env variables
 export VAGRANT_DEFAULT_PROVIDER=virtualbox
 export EDITOR="vim"
-echo ".bashrc loaded"
+# avoid breaking SCP
+if [ "$SSH_TTY"]; then
+    echo ".bashrc loaded"
+fi
