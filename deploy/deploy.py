@@ -95,6 +95,8 @@ class Dotfile:
 if __name__ == "__main__":
     vimrc = Dotfile("virmc", "vim/vimrc", ".vimrc")
     vimrc.deploy()
+    git = Dotfile("gitconfig", "git/gitconfig", ".gitconfig")
+    git.deploy()
     bash_profile = Dotfile("bash_profile", "bash/bash_profile", ".bash_profile")
     bash_profile.deploy()
     bashrc = Dotfile("bashrc", "bash/bashrc", ".bashrc")

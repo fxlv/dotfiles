@@ -1,0 +1,11 @@
+[user]
+    name = Kaspars Mickevics
+    email = kaspars@fx.lv
+[color]
+    diff = auto
+    ui = auto
+[alias]
+    ls-deleted = ls-files --deleted
+    diffc = diff --cached
+    prettylog = log --graph --topo-order --abbrev-commit --date=short --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset'
+
