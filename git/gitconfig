@@ -4,6 +4,8 @@
 [color]
     diff = auto
     ui = auto
+[push]
+    default = simple
 [alias]
     ls-deleted = ls-files --deleted
     diffc = diff --cached
