@@ -68,6 +68,21 @@ class Dotfile:
         else:
             return False
 
+    def backup(self):
+        "Back up the destination file if possible"
+        backup_dst = "{0}.backup".format(self.dst)
+        if os.path.exists(backup_dst):
+            print "{0} already exists, cannot create a backup.".format(backup_dst)
+            return False
+        if not os.path.isfile(self.dst):
+            print "{0} is not a file, cannot create a backup".format(backup_dst)
+            return False
+        # proceed with backin up the file
+        print "Backing up {0} -> {1}".format(self.dst, backup_dst)
+        os.rename(self.dst, backup_dst)
+        self.backup_dst = backup_dst
+        return True
+
 
     def deploy(self):
         if self.compile_dotfile_script:
@@ -83,10 +98,14 @@ class Dotfile:
         # if the destination file already exists but it is not
         # our symlink then print out a warning to the user and skip it
         if self.exists():
-            print "File {0} already exists but it is not the correct dotfile".format(self.dst)
-            print "Please remove it and re-run this script."
-            print "Skipping {0}".format(self.name)
-            return
+            if self.backup():
+                print "Backup file {0} created".format(self.backup_dst)
+            else:
+                print "File {0} already exists but it is not the correct dotfile".format(self.dst)
+                print "Backing up also failed."
+                print "Please remove it and re-run this script."
+                print "Skipping {0}".format(self.name)
+                return
 
         # finally symlink the dotfile
         print "Symlinking {0} -> {1}".format(self.src, self.dst)
