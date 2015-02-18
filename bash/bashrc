@@ -19,6 +19,15 @@ HISTTIMEFORMAT="[ %d.%m.%y %T ] "
 HISTCONTROL=ignoredups
 PS1='[\u@\h \w]\$ '
 
+if [ -d ${HOME}/bin ]; then
+    PATH=${HOME}/bin:$PATH
+fi
+if [ -d ${HOME}/opt/bin ]; then
+    PATH=${HOME}/opt/bin:$PATH
+fi
+
+export PATH
+
 export HISTFILESIZE HISTSIZE HISTTIMEFORMAT PS1
 # some basic env variables
 export VAGRANT_DEFAULT_PROVIDER=virtualbox
