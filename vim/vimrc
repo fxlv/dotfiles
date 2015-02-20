@@ -19,6 +19,8 @@ Plug 'nvie/vim-flake8'
 Plug 'rodjek/vim-puppet'
 Plug 'tpope/vim-fugitive'
 
+Plug 'ervandew/supertab' 
+
 call plug#end()
 "
 "
@@ -34,6 +36,12 @@ highlight OverLength ctermbg=red ctermfg=white guibg=#592929
 match OverLength /\%81v.\+/
 set cursorline
 set smartindent
+
+" smartindent does nothing useful for python 
+" also commented out lines don't get indented
+" so the solution is to disable autoindenting for python scripts
+au! FileType python setl nosmartindent
+
 set number
 set ruler
 set showmatch
