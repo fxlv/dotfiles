@@ -22,9 +22,6 @@ Plug 'tpope/vim-fugitive'
 Plug 'ervandew/supertab' 
 
 call plug#end()
-"
-"
-"
 
 set nocompatible 
 syntax enable
@@ -32,8 +29,14 @@ set showmode " always show mode
 set hlsearch
 set backspace =2
 set visualbell
+"max line length should be no more than 80 characters
+"highlight the 80th character and draw a vertical line
+"at 81st character
 highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-match OverLength /\%81v.\+/
+match OverLength /\%80v.\+/
+set colorcolumn=81
+highlight ColorColumn ctermbg=DarkGray
+
 set cursorline
 set smartindent
 
@@ -45,7 +48,6 @@ au! FileType python setl nosmartindent
 set number
 set ruler
 set showmatch
-set textwidth=80
 set expandtab
 set smarttab autoindent
 set tabstop=4 
