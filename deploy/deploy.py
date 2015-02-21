@@ -5,16 +5,6 @@ import os
 from platform import uname
 import sys
 
-uname = uname()[0]
-if uname == "Darwin":
-    platform = "OSX"
-elif uname == "Linux":
-    platform = "Linux"
-else:
-    print "Unsupported platform"
-    sys.exit(1)
-
-print "Platform:", platform
 
 
 class Dotfile:
@@ -32,8 +22,9 @@ class Dotfile:
         self.compile_dotfile_script = compile_dotfile_script
 
     def compile_dotfile(self):
-        if self.debug: 
-            print "Compiling {0} dotfile by executing {1}".format(self.name, self.compile_dotfile_script)
+        if self.debug:
+            msg = "Compiling {0} dotfile by executing {1}"
+            print msg.format(self.name, self.compile_dotfile_script)
         dotfile_path = os.path.dirname(self.src)
         os.chdir(dotfile_path)
         compile_script = "./{0}".format(self.compile_dotfile_script)
@@ -41,10 +32,10 @@ class Dotfile:
 
     def __repr__(self):
         return "Dotfile: {0}".format(self.name)
- 
+
     def __str__(self):
         return self.name
-   
+
     def exists(self):
         "Check if the destination file exists"
         if os.path.exists(self.dst):
@@ -63,7 +54,8 @@ class Dotfile:
                     return False
 
             else:
-                print "The file {0} exists but it is not a symlink".format(self.dst)
+                msg = "The file {0} exists but it is not a symlink"
+                print msg.format(self.dst)
                 return False
         else:
             return False
@@ -72,10 +64,12 @@ class Dotfile:
         "Back up the destination file if possible"
         backup_dst = "{0}.backup".format(self.dst)
         if os.path.exists(backup_dst):
-            print "{0} already exists, cannot create a backup.".format(backup_dst)
+            msg = "{0} already exists, cannot create a backup."
+            print msg.format(backup_dst)
             return False
         if not os.path.isfile(self.dst):
-            print "{0} is not a file, cannot create a backup".format(backup_dst)
+            msg = "{0} is not a file, cannot create a backup"
+            print msg.format(backup_dst)
             return False
         # proceed with backin up the file
         print "Backing up {0} -> {1}".format(self.dst, backup_dst)
@@ -83,13 +77,13 @@ class Dotfile:
         self.backup_dst = backup_dst
         return True
 
-
     def deploy(self):
         if self.compile_dotfile_script:
             self.compile_dotfile()
         # we can handle both relative and absolute path in home directory
         if self.home not in self.dst:
-            if self.debug: print "DEBUG: Appending {0} to {1}".format(self.home, self.dst)
+            if self.debug:
+                print "DEBUG: Appending {0} to {1}".format(self.home, self.dst)
             self.dst = "{0}/{1}".format(self.home, self.dst)
         # check if the dotfile is already deployed
         if self.is_deployed():
@@ -101,7 +95,9 @@ class Dotfile:
             if self.backup():
                 print "Backup file {0} created".format(self.backup_dst)
             else:
-                print "File {0} already exists but it is not the correct dotfile".format(self.dst)
+                msg = "File {0} already exists "\
+                      "but it is not the correct dotfile"
+                print msg.format(self.dst)
                 print "Backing up also failed."
                 print "Please remove it and re-run this script."
                 print "Skipping {0}".format(self.name)
@@ -111,16 +107,28 @@ class Dotfile:
         print "Symlinking {0} -> {1}".format(self.src, self.dst)
         os.symlink(self.src, self.dst)
 
-if __name__ == "__main__":
+
+def main():
+    uname_string = uname()[0]
+    if uname_string == "Darwin":
+        platform = "OSX"
+    elif uname_string == "Linux":
+        platform = "Linux"
+    else:
+        print "Unsupported platform"
+        sys.exit(1)
+    print "Platform:", platform
     vimrc = Dotfile("virmc", "vim/vimrc", ".vimrc")
     vimrc.deploy()
     git = Dotfile("gitconfig", "git/gitconfig", ".gitconfig")
     git.deploy()
-    bash_profile = Dotfile("bash_profile", "bash/bash_profile", ".bash_profile")
+    bash_profile = Dotfile("bash_profile",
+                           "bash/bash_profile", ".bash_profile")
     bash_profile.deploy()
     bashrc = Dotfile("bashrc", "bash/bashrc", ".bashrc")
     bashrc.deploy()
-    bash_aliases = Dotfile("bash_aliases", "bash/bash_aliases", ".bash_aliases")
+    bash_aliases = Dotfile("bash_aliases",
+                           "bash/bash_aliases", ".bash_aliases")
     bash_aliases.deploy()
     ssh_config = Dotfile("ssh config", "ssh/ssh_config", ".ssh/config",
                          compile_dotfile_script="compile.sh")
@@ -132,3 +140,5 @@ if __name__ == "__main__":
         bash_mac.deploy()
 
 
+if __name__ == "__main__":
+    main()
