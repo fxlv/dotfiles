@@ -6,7 +6,6 @@ from platform import uname
 import sys
 
 
-
 class Dotfile:
 
     def __init__(self, name, src, dst, compile_dotfile_script=None):
@@ -18,8 +17,15 @@ class Dotfile:
         self.home = os.environ.get("HOME")
         # prepend 'dotfiles_directory' to the dotfile source
         self.src = "{0}/{1}".format(self.dotfiles_directory, self.src)
+        # we can handle both relative and absolute path in home directory
+        if self.home not in self.dst:
+            print "DEBUG: Appending {0} to {1}".format(self.home, self.dst)
+            self.dst = "{0}/{1}".format(self.home, self.dst)
+        self.dst_parent_dir = os.path.dirname(self.dst)
         self.debug = True
         self.compile_dotfile_script = compile_dotfile_script
+        print "DEBUG: self.dst: {0}".format(self.dst)
+        print "DEBUG: self.dst_parent_dir: {0}".format(self.dst_parent_dir)
 
     def compile_dotfile(self):
         if self.debug:
@@ -77,14 +83,20 @@ class Dotfile:
         self.backup_dst = backup_dst
         return True
 
+    def parent_dir_exists(self):
+        if os.path.exists(self.dst_parent_dir):
+            return True
+        return False
+
+    def create_parent_dir(self):
+        print "DEBUG: creating parent dir {0}".format(self.dst_parent_dir)
+        os.mkdir(self.dst_parent_dir)
+
     def deploy(self):
+        if not self.parent_dir_exists():
+            self.create_parent_dir()
         if self.compile_dotfile_script:
             self.compile_dotfile()
-        # we can handle both relative and absolute path in home directory
-        if self.home not in self.dst:
-            if self.debug:
-                print "DEBUG: Appending {0} to {1}".format(self.home, self.dst)
-            self.dst = "{0}/{1}".format(self.home, self.dst)
         # check if the dotfile is already deployed
         if self.is_deployed():
             print "Dotfile {0} is already deployed.".format(self.name)
@@ -118,8 +130,10 @@ def main():
         print "Unsupported platform"
         sys.exit(1)
     print "Platform:", platform
-    vimrc = Dotfile("virmc", "vim/vimrc", ".vimrc")
+    vimrc = Dotfile("vimrc", "vim/vimrc", ".vimrc")
     vimrc.deploy()
+    screen = Dotfile("screen", "screen/screenrc", ".screenrc")
+    screen.deploy()
     git = Dotfile("gitconfig", "git/gitconfig", ".gitconfig")
     git.deploy()
     bash_profile = Dotfile("bash_profile",
@@ -138,6 +152,13 @@ def main():
         xmodmap.deploy()
         bash_mac = Dotfile("bash_mac", "bash/bash_mac", ".bash_mac")
         bash_mac.deploy()
+    elif platform == "Linux":
+        mc = Dotfile("mc", "mc/ini", ".config/mc/ini")
+        mc.deploy()
+        ansiblerc = Dotfile("ansiblerc", "bash/ansiblerc", ".ansiblerc")
+        ansiblerc.deploy()
+        tmux = Dotfile("tmux", "tmux/tmux.conf", ".tmux.conf")
+        tmux.deploy()
 
 
 if __name__ == "__main__":
