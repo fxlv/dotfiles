@@ -1,5 +1,5 @@
 export ANSIBLE_PER_HOST_LOG_DIR="${HOME}"/git/ansible-core/log
 export ANSIBLE_HOST_KEY_CHECKING=False
 
-alias ansible-env-setup=". ${HOME}/opt/ansible/hacking/env-setup'
+alias ansible-env-setup=". ${HOME}/opt/ansible/hacking/env-setup"
 alias ansible-playbook="ansible-playbook --extra-vars='log_dir=${HOME}/git/ansible-core/log'"
