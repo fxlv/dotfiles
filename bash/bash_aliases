@@ -16,5 +16,7 @@ _ssh_auth_save() {
 
 alias screen='_ssh_auth_save ; export HOSTNAME=$(hostname) ; screen'
 
+alias ds='dstat -lcidmnpryt'
+
 
 alias puppet-validate='puppet parser validate'
