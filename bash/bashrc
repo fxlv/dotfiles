@@ -1,15 +1,15 @@
-if [ -e $HOME/.bash_aliases ]; then
-    source $HOME/.bash_aliases
+if [ -e "$HOME/.bash_aliases" ]; then
+    source "$HOME/.bash_aliases"
 fi
-if [ -e $HOME/.bash_mac ]; then
-    source $HOME/.bash_mac
+if [ -e "$HOME/.bash_mac" ]; then
+    source "$HOME/.bash_mac"
     echo ".bash_mac loaded"
 fi
-if [ -e $HOME/.bash_mac ]; then
-    source $HOME/.bash_mac
+if [ -e "$HOME/.bash_mac" ]; then
+    source "$HOME/.bash_mac"
 fi
-if [ -e $HOME/.ansiblerc ]; then
-    source $HOME/.ansiblerc
+if [ -e "$HOME/.ansiblerc" ]; then
+    source "$HOME/.ansiblerc"
 fi
 
 # common settings
@@ -22,10 +22,10 @@ HISTTIMEFORMAT="[ %d.%m.%y %T ] "
 HISTCONTROL=ignoredups
 PS1='[\u@\h \w]\$ '
 
-if [ -d ${HOME}/bin ]; then
+if [ -d "${HOME}/bin" ]; then
     PATH=${HOME}/bin:$PATH
 fi
-if [ -d ${HOME}/opt/bin ]; then
+if [ -d "${HOME}/opt/bin" ]; then
     PATH=${HOME}/opt/bin:$PATH
 fi
 
