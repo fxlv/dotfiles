@@ -29,6 +29,16 @@ if [ -d "${HOME}/opt/bin" ]; then
     PATH=${HOME}/opt/bin:$PATH
 fi
 
+# bin-scripts should be in either ~/opt or ~/github
+if [ -d "${HOME}/opt/bin-scripts" ]; then
+    PATH=${HOME}/opt/bin-scripts/laptop:$PATH
+    PATH=${HOME}/opt/bin-scripts:$PATH
+fi
+if [ -d "${HOME}/github/bin-scripts" ]; then
+    PATH=${HOME}/github/bin-scripts/laptop:$PATH
+    PATH=${HOME}/github/bin-scripts:$PATH
+fi
+
 export PATH
 
 export HISTFILESIZE HISTSIZE HISTTIMEFORMAT PS1
