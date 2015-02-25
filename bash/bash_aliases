@@ -1,6 +1,6 @@
 alias iptls='sudo iptables -L -v -n --line-numbers'
 # dcfldd is waaaay cooler than dd
-if which dcfldd > /dev/null; then
+if which dcfldd > /dev/null 2&>1; then
     alias dd="dcfldd"
 fi
 alias ll='/bin/ls -lashG'
@@ -17,6 +17,5 @@ _ssh_auth_save() {
 alias screen='_ssh_auth_save ; export HOSTNAME=$(hostname) ; screen'
 
 alias ds='dstat -lcidmnpryt'
-
 
 alias puppet-validate='puppet parser validate'
