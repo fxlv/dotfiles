@@ -3,3 +3,6 @@ export ANSIBLE_HOST_KEY_CHECKING=False
 
 alias ansible-env-setup=". ${HOME}/opt/ansible/hacking/env-setup"
 alias ansible-playbook="ansible-playbook --extra-vars='log_dir=${HOME}/git/ansible-core/log'"
+
+alias ansible-show-puppet-changed='find log/ -name "puppetrun*changed.log" -mtime -1 -exec ls -lash {} \;|sort -k 10' 
+
