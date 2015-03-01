@@ -15,6 +15,8 @@ Plug 'nvie/vim-flake8'
 Plug 'rodjek/vim-puppet'
 Plug 'tpope/vim-fugitive'
 Plug 'ervandew/supertab' 
+" YCM needs it's installer to be called as well
+Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 call plug#end()
 "
 " additionally for syntax checking/linting install:
@@ -36,15 +38,20 @@ set nocompatible
 syntax enable
 set showmode " always show mode
 set hlsearch
+
+" for colors, see this awesome color table
+" https://github.com/guns/xterm-color-table.vim
+hi Search ctermfg=31 ctermbg=157
+highlight OverLength ctermbg=red ctermfg=white
+set colorcolumn=81
+highlight ColorColumn ctermbg=DarkGray
+
 set backspace =2
 set visualbell
 "max line length should be no more than 80 characters
 "highlight the 80th character and draw a vertical line
 "at 81st character
-highlight OverLength ctermbg=red ctermfg=white guibg=#592929
 match OverLength /\%80v.\+/
-set colorcolumn=81
-highlight ColorColumn ctermbg=DarkGray
 
 set cursorline
 set smartindent
