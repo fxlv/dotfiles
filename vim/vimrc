@@ -15,6 +15,7 @@ Plug 'nvie/vim-flake8'
 Plug 'rodjek/vim-puppet'
 Plug 'tpope/vim-fugitive'
 Plug 'ervandew/supertab' 
+Plug 'bling/vim-airline' 
 " YCM needs it's installer to be called as well
 Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 call plug#end()
@@ -33,6 +34,9 @@ call plug#end()
 "   * shellcheck
 "     install shellcheck package
 "   
+" display airline tabline
+let g:airline#extensions#tabline#enabled = 1
+"
 
 set nocompatible 
 syntax enable
