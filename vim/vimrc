@@ -90,4 +90,6 @@ vmap <C-C> "+y
 command R !./%
 " execute as a python script
 command P ! python ./%
+" validate puppet manifest
+command Pupp ! puppet parser validate %
 
