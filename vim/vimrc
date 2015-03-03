@@ -34,8 +34,9 @@ call plug#end()
 "   * shellcheck
 "     install shellcheck package
 "   
-" display airline tabline
-let g:airline#extensions#tabline#enabled = 1
+" if you want to display airline tabline
+" then uncomment the next line
+" let g:airline#extensions#tabline#enabled = 1
 "
 
 set nocompatible 
