@@ -15,6 +15,7 @@ Plug 'nvie/vim-flake8'
 Plug 'rodjek/vim-puppet'
 Plug 'tpope/vim-fugitive'
 Plug 'ervandew/supertab' 
+Plug 'scrooloose/nerdtree'
 Plug 'bling/vim-airline' 
 " YCM needs it's installer to be called as well
 Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
@@ -38,6 +39,13 @@ call plug#end()
 " then uncomment the next line
 " let g:airline#extensions#tabline#enabled = 1
 "
+"
+"Open nerdtree by default if new empty vim is opened
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+map <C-n> :NERDTreeToggle<CR>
+map <C-f> :NERDTreeFind<CR>
 
 set nocompatible 
 syntax enable
