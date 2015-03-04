@@ -17,6 +17,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'ervandew/supertab' 
 Plug 'scrooloose/nerdtree'
 Plug 'bling/vim-airline' 
+Plug 'altercation/vim-colors-solarized'
 " YCM needs it's installer to be called as well
 Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 call plug#end()
@@ -44,9 +45,6 @@ call plug#end()
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
-map <C-n> :NERDTreeToggle<CR>
-map <C-f> :NERDTreeFind<CR>
-
 set nocompatible 
 syntax enable
 set showmode " always show mode
@@ -54,6 +52,8 @@ set hlsearch
 
 " for colors, see this awesome color table
 " https://github.com/guns/xterm-color-table.vim
+set background=light
+colorscheme solarized
 hi Search ctermfg=31 ctermbg=157
 highlight OverLength ctermbg=red ctermfg=white
 set colorcolumn=81
@@ -84,6 +84,7 @@ set shiftwidth=4
 set softtabstop=4 
 set shiftround 
 
+" keyboard shortcuts
 nnoremap <F5> :set invpaste paste?<Enter>
 imap <F5> <C-O><F5>
 set pastetoggle=<F5>
@@ -94,7 +95,10 @@ nmap <C-V> "+gP
 imap <C-V> <ESC><C-V>i
 vmap <C-C> "+y 
 
+map <C-n> :NERDTreeToggle<CR>
+map <C-f> :NERDTreeFind<CR>
 
+" custom commands
 " execute the script
 command R !./%
 " execute as a python script
