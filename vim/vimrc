@@ -52,8 +52,14 @@ set hlsearch
 
 " for colors, see this awesome color table
 " https://github.com/guns/xterm-color-table.vim
+
+
+" use solarized colorscheme on my mac
+if has('mac')
 set background=light
 colorscheme solarized
+endif
+
 hi Search ctermfg=31 ctermbg=157
 highlight OverLength ctermbg=red ctermfg=white
 set colorcolumn=81
