@@ -90,6 +90,9 @@ class Dotfile:
 
     def create_parent_dir(self):
         print "DEBUG: creating parent dir {0}".format(self.dst_parent_dir)
+        parent_of_parent = os.path.dirname(self.dst_parent_dir)
+        if not os.path.exists(parent_of_parent):
+            os.mkdir(parent_of_parent)
         os.mkdir(self.dst_parent_dir)
 
     def deploy(self):
