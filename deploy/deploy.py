@@ -139,6 +139,8 @@ def main():
     bash_profile = Dotfile("bash_profile",
                            "bash/bash_profile", ".bash_profile")
     bash_profile.deploy()
+    colors = Dotfile("colors", "bash/colors", ".colors")
+    colors.deploy()
     bashrc = Dotfile("bashrc", "bash/bashrc", ".bashrc")
     bashrc.deploy()
     bash_aliases = Dotfile("bash_aliases",
