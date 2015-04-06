@@ -20,6 +20,11 @@ Plug 'bling/vim-airline'
 Plug 'altercation/vim-colors-solarized'
 " YCM needs it's installer to be called as well
 Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
+" on FreeBSD, make sure you have clang36 and cmake installed
+" in order to build YCM libraries
+" also install boost-libs boost-python-libs
+" and then before calling ./install.sh:
+" export LD_LIBRARY_PATH=/usr/local/llvm35/lib/
 call plug#end()
 "
 " additionally for syntax checking/linting install:
