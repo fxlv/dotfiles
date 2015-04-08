@@ -44,6 +44,13 @@ fi
 
 export PATH
 
+if [ "$OSTYPE" == "freebsd11.0" ]; then
+    if [ -x /usr/bin/less ]; then
+        export PAGER=less
+    else
+        echo "Please install 'less'"
+    fi
+fi
 export HISTFILESIZE HISTSIZE HISTTIMEFORMAT PS1
 # some basic env variables
 export VAGRANT_DEFAULT_PROVIDER=virtualbox
