@@ -135,6 +135,8 @@ def main():
         print "Unsupported platform"
         sys.exit(1)
     print "Platform:", platform
+    mostrc = Dotfile("mostrc", "most/mostrc", ".mostrc")
+    mostrc.deploy()
     vimrc = Dotfile("vimrc", "vim/vimrc", ".vimrc")
     vimrc.deploy()
     screen = Dotfile("screen", "screen/screenrc", ".screenrc")

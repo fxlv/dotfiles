@@ -1,0 +1,7 @@
+color normal darkgray white
+color status green lightgray
+color underline brightgreen default
+color overstrike brightred default
+
+setkey "up" "k"
+setkey "down" "j"
