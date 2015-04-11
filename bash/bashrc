@@ -52,6 +52,14 @@ if [ "$OSTYPE" == "freebsd11.0" ]; then
     else
         echo "Please consider installing 'most' or 'less'"
     fi
+elif [ "$OSTYPE" == "linux-gnu" ]; then
+    if [ -x /usr/bin/most ]; then
+        export PAGER=most
+    elif [ -x /usr/bin/less ]; then
+        export PAGER=less
+    else
+        echo "Please consider installing 'most' or 'less'"
+    fi
 fi
 export HISTFILESIZE HISTSIZE HISTTIMEFORMAT PS1
 # some basic env variables
