@@ -1,0 +1,16 @@
+# tput colors
+# https://en.wikipedia.org/wiki/Tput
+#
+# foreground colors are set by: tput setaf, bg colors are set by: tput setab
+BOLD=$(tput bold)
+BLACK=$(tput setaf 0)
+RED=$(tput setaf 1)
+RED_BG=$(tput setab 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+CYAN=$(tput setaf 6)
+WHITE=$(tput setaf 7)
+DEFAULT=$(tput sgr0)
+UNDERLINE=$(tput smul)

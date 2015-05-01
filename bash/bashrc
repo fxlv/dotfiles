@@ -1,3 +1,6 @@
+if [ -e "$HOME/.colors" ]; then
+    source "$HOME/.colors"
+fi
 if [ -e "$HOME/.bash_aliases" ]; then
     source "$HOME/.bash_aliases"
 fi
@@ -41,11 +44,40 @@ fi
 
 export PATH
 
+if [ "$OSTYPE" == "freebsd11.0" ]; then
+    if [ -x /usr/local/bin/most ]; then
+        export PAGER=most
+    elif [ -x /usr/bin/less ]; then
+        export PAGER=less
+    else
+        echo "Please consider installing 'most' or 'less'"
+    fi
+elif [ "$OSTYPE" == "linux-gnu" ]; then
+    if [ -x /usr/bin/most ]; then
+        export PAGER=most
+    elif [ -x /usr/bin/less ]; then
+        export PAGER=less
+    else
+        echo "Please consider installing 'most' or 'less'"
+    fi
+fi
 export HISTFILESIZE HISTSIZE HISTTIMEFORMAT PS1
 # some basic env variables
 export VAGRANT_DEFAULT_PROVIDER=virtualbox
 export EDITOR="vim"
+
+
+# Add ssh-key to ssh-agent if this is one of the workstations
+# I assume that ssh-agent is started by something else (like .xinitrc).
+if (( SSH_AGENT_PID )); then
+    if ssh-add -L > /dev/null; then
+        echo "SSH key already loaded"
+    else
+        echo "Adding ssh key to ssh-agent"
+        ssh-add
+    fi
+fi
 # avoid breaking SCP
-if [ "$SSH_TTY" ]; then
+if [ "$SSH_TTY" -o "$DESKTOP_SESSION" ]; then
     echo ".bashrc loaded"
 fi

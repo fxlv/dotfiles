@@ -20,6 +20,15 @@ Plug 'bling/vim-airline'
 Plug 'altercation/vim-colors-solarized'
 " YCM needs it's installer to be called as well
 Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
+" on FreeBSD, make sure you have clang36 (or clang36) and cmake installed
+" in order to build YCM libraries
+" check the YCM Readme for details, but essentially:
+" pkg install llvm35 boost-all boost-python-libs clang35
+" export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/llvm35/lib/
+" ./install.sh --clang-completer --system-libclang --system-boost
+"
+" If you are getting some python exceptions, check if python supports SSL
+" I have seen errors when python is built with LibreSSL
 call plug#end()
 "
 " additionally for syntax checking/linting install:

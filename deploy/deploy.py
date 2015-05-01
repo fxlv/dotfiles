@@ -33,8 +33,13 @@ class Dotfile:
             print msg.format(self.name, self.compile_dotfile_script)
         dotfile_path = os.path.dirname(self.src)
         os.chdir(dotfile_path)
-        compile_script = "./{0}".format(self.compile_dotfile_script)
-        os.system(compile_script)
+        if os.path.exists(self.compile_dotfile_script):
+            compile_script = "./{0}".format(self.compile_dotfile_script)
+            os.system(compile_script)
+        else:
+            print "Warning"
+            warn_msg="Compile script {0} does not exist!"
+            print warn_msg.format(self.compile_dotfile_script)
 
     def __repr__(self):
         return "Dotfile: {0}".format(self.name)
@@ -129,10 +134,14 @@ def main():
         platform = "OSX"
     elif uname_string == "Linux":
         platform = "Linux"
+    elif uname_string == "FreeBSD":
+        platform = "FreeBSD"
     else:
         print "Unsupported platform"
         sys.exit(1)
     print "Platform:", platform
+    mostrc = Dotfile("mostrc", "most/mostrc", ".mostrc")
+    mostrc.deploy()
     vimrc = Dotfile("vimrc", "vim/vimrc", ".vimrc")
     vimrc.deploy()
     screen = Dotfile("screen", "screen/screenrc", ".screenrc")
@@ -142,6 +151,8 @@ def main():
     bash_profile = Dotfile("bash_profile",
                            "bash/bash_profile", ".bash_profile")
     bash_profile.deploy()
+    colors = Dotfile("colors", "bash/colors", ".colors")
+    colors.deploy()
     bashrc = Dotfile("bashrc", "bash/bashrc", ".bashrc")
     bashrc.deploy()
     bash_aliases = Dotfile("bash_aliases",
@@ -155,7 +166,10 @@ def main():
         xmodmap.deploy()
         bash_mac = Dotfile("bash_mac", "bash/bash_mac", ".bash_mac")
         bash_mac.deploy()
-    elif platform == "Linux":
+    elif platform == "Linux" or platform == "FreeBSD":
+        if platform == "FreeBSD":
+            xinitrc = Dotfile("xinitrc", "x/xinitrc", ".xinitrc")
+            xinitrc.deploy()
         mc = Dotfile("mc", "mc/ini", ".config/mc/ini")
         mc.deploy()
         ansiblerc = Dotfile("ansiblerc", "bash/ansiblerc", ".ansiblerc")
