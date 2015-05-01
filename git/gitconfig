@@ -7,6 +7,7 @@
 [push]
     default = simple
 [alias]
+    logs = log --stat --summary
     ls-deleted = ls-files --deleted
     diffc = diff --cached
     last = log --graph --relative-date --topo-order -n 10
