@@ -33,8 +33,13 @@ class Dotfile:
             print msg.format(self.name, self.compile_dotfile_script)
         dotfile_path = os.path.dirname(self.src)
         os.chdir(dotfile_path)
-        compile_script = "./{0}".format(self.compile_dotfile_script)
-        os.system(compile_script)
+        if os.path.exists(self.compile_dotfile_script):
+            compile_script = "./{0}".format(self.compile_dotfile_script)
+            os.system(compile_script)
+        else:
+            print "Warning"
+            warn_msg="Compile script {0} does not exist!"
+            print warn_msg.format(self.compile_dotfile_script)
 
     def __repr__(self):
         return "Dotfile: {0}".format(self.name)
