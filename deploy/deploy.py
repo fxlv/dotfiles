@@ -162,6 +162,9 @@ def main():
         bash_mac = Dotfile("bash_mac", "bash/bash_mac", ".bash_mac")
         bash_mac.deploy()
     elif platform == "Linux" or platform == "FreeBSD":
+        if platform == "FreeBSD":
+            xinitrc = Dotfile("xinitrc", "x/xinitrc", ".xinitrc")
+            xinitrc.deploy()
         mc = Dotfile("mc", "mc/ini", ".config/mc/ini")
         mc.deploy()
         ansiblerc = Dotfile("ansiblerc", "bash/ansiblerc", ".ansiblerc")
