@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 cat default_config > ssh_config
 for hostsfile in *.hosts
