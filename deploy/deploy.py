@@ -161,22 +161,25 @@ def main():
     ssh_config = Dotfile("ssh config", "ssh/ssh_config", ".ssh/config",
                          compile_dotfile_script="compile.sh")
     ssh_config.deploy()
+    # Ansiblerc is the same on all platforms
+    ansiblerc = Dotfile("ansiblerc", "bash/ansiblerc", ".ansiblerc")
+    ansiblerc.deploy()
+    # OSX will have some specifics
     if platform == "OSX":
         xmodmap = Dotfile("Xmodmap", "osx/Xmodmap", ".Xmodmap")
         xmodmap.deploy()
         bash_mac = Dotfile("bash_mac", "bash/bash_mac", ".bash_mac")
         bash_mac.deploy()
     elif platform == "Linux" or platform == "FreeBSD":
+        # on FreeBSD I use .xinitrc to start up x
         if platform == "FreeBSD":
             xinitrc = Dotfile("xinitrc", "x/xinitrc", ".xinitrc")
             xinitrc.deploy()
+        # mc and tmux are only used on linux and freebsd
         mc = Dotfile("mc", "mc/ini", ".config/mc/ini")
         mc.deploy()
-        ansiblerc = Dotfile("ansiblerc", "bash/ansiblerc", ".ansiblerc")
-        ansiblerc.deploy()
         tmux = Dotfile("tmux", "tmux/tmux.conf", ".tmux.conf")
         tmux.deploy()
-
 
 if __name__ == "__main__":
     main()
