@@ -1,18 +1,15 @@
 if [ $(uname) == "Darwin" ]; then
     echo "Setting up OSX ansible environment"
     export ANSIBLE_PER_HOST_LOG_DIR="${HOME}/github/ansible/log"
-    alias ansible-playbook='ansible-playbook \
-        --extra-vars="log_dir=${HOME}/github/ansible/log"' 
+    alias ansible-playbook='ansible-playbook --extra-vars="log_dir=${HOME}/github/ansible/log"' 
 else
     export ANSIBLE_PER_HOST_LOG_DIR="${HOME}"/git/ansible-core/log
-    alias ansible-playbook="ansible-playbook \
-        --extra-vars='log_dir=${HOME}/git/ansible-core/log'"
+    alias ansible-playbook="ansible-playbook --extra-vars='log_dir=${HOME}/git/ansible-core/log'"
 fi
 
 export ANSIBLE_HOST_KEY_CHECKING=False
 
 alias ansible-env-setup=". ${HOME}/opt/ansible/hacking/env-setup"
 
-alias ansible-show-puppet-changed='find log/ \
-    -name "puppetrun*changed.log" -mtime -1 -exec ls -lash {} \;|sort -k 10' 
+alias ansible-show-puppet-changed='find log/ -name "puppetrun*changed.log" -mtime -1 -exec ls -lash {} \;|sort -k 10' 
 
