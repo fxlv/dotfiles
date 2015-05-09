@@ -1,13 +1,6 @@
-if [ -e $HOME/.ansible_environment ]; then
-    source $HOME/.ansible_environment
-fi
-
-
-
-
 echo ".bash_profile loaded"
 source $HOME/.bashrc
-####
+
 if [ -e /etc/debian_version ]; then
     if [ -e /usr/games/fortune ]; then
         echo
@@ -16,4 +9,3 @@ if [ -e /etc/debian_version ]; then
 fi
 echo
 uptime
-
