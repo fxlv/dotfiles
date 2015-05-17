@@ -11,6 +11,7 @@ call plug#begin()
 Plug 'tpope/vim-sensible'
 Plug 'chase/vim-ansible-yaml'
 Plug 'scrooloose/syntastic'
+Plug 'moll/vim-node'
 Plug 'nvie/vim-flake8'
 Plug 'rodjek/vim-puppet'
 Plug 'tpope/vim-fugitive'
