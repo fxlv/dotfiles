@@ -67,6 +67,19 @@ export VAGRANT_DEFAULT_PROVIDER=virtualbox
 export EDITOR="vim"
 
 
+if [ "$OSTYPE" == "cygwin" ]; then
+    echo "Running in cygwin, brawe man."
+    if ssh-add -L > /dev/null; then
+        echo "SSH agent seems to be OK"
+    else
+        echo "Let me set up ssh agent for you sir"
+        ssh-agent > .ssh_agent
+        source .ssh_agent
+        ssh-add
+    fi
+    
+fi
+
 # Add ssh-key to ssh-agent if this is one of the workstations
 # I assume that ssh-agent is started by something else (like .xinitrc).
 if (( SSH_AGENT_PID )); then
