@@ -8,14 +8,26 @@
 au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/indent/yaml.vim
 
 call plug#begin()
-Plug 'tpope/vim-sensible'
-Plug 'chase/vim-ansible-yaml'
 Plug 'scrooloose/syntastic'
+"node.js and javascript
+" make sure you have jshint installed: npm install -g jshint
 Plug 'moll/vim-node'
 Plug 'pangloss/vim-javascript'
+Plug 'wookiehangover/jshint.vim'
+" Additionally, after installing tern_for_vim, go to the plugin
+" directory and run 'npm install'
+Plug 'marijnh/tern_for_vim'
+"Ansible
+Plug 'chase/vim-ansible-yaml'
+" Python
 Plug 'nvie/vim-flake8'
+" Puppet
 Plug 'rodjek/vim-puppet'
+" other vim stuff
+Plug 'tpope/vim-surround'
+Plug 'lokaltog/vim-easymotion'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-sensible'
 Plug 'ervandew/supertab' 
 Plug 'scrooloose/nerdtree'
 Plug 'bling/vim-airline' 
