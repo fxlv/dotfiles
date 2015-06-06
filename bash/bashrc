@@ -60,6 +60,14 @@ elif [ "$OSTYPE" == "linux-gnu" ]; then
     else
         echo "Please consider installing 'most' or 'less'"
     fi
+elif [ "$OSTYPE" == "darwin14" ]; then
+    if [ -x /usr/local/bin/most ]; then
+        export PAGER=most
+    elif [ -x /usr/bin/less ]; then
+        export PAGER=less
+    else
+        echo "Please consider installing 'most' or 'less'"
+    fi
 fi
 export HISTFILESIZE HISTSIZE HISTTIMEFORMAT PS1
 # some basic env variables
@@ -91,6 +99,6 @@ if (( SSH_AGENT_PID )); then
     fi
 fi
 # avoid breaking SCP
-if [ "$SSH_TTY" -o "$DESKTOP_SESSION" ]; then
+if [ "$SSH_TTY" -o "$DESKTOP_SESSION" -o "$OSTYPE" == "darwin14" ]; then
     echo ".bashrc loaded"
 fi
