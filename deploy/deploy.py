@@ -136,6 +136,8 @@ def main():
         platform = "Linux"
     elif uname_string == "FreeBSD":
         platform = "FreeBSD"
+    elif uname_string == "CYGWIN_NT-10.0-WOW":
+	platform = "Cygwin"
     else:
         print "Unsupported platform"
         sys.exit(1)
