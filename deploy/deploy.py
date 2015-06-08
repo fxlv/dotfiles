@@ -166,6 +166,9 @@ def main():
     # Ansiblerc is the same on all platforms
     ansiblerc = Dotfile("ansiblerc", "bash/ansiblerc", ".ansiblerc")
     ansiblerc.deploy()
+    # Tmux config is the same everywhere
+    tmux = Dotfile("tmux", "tmux/tmux.conf", ".tmux.conf")
+    tmux.deploy()
     # OSX will have some specifics
     if platform == "OSX":
         xmodmap = Dotfile("Xmodmap", "osx/Xmodmap", ".Xmodmap")
@@ -180,8 +183,6 @@ def main():
         # mc and tmux are only used on linux and freebsd
         mc = Dotfile("mc", "mc/ini", ".config/mc/ini")
         mc.deploy()
-        tmux = Dotfile("tmux", "tmux/tmux.conf", ".tmux.conf")
-        tmux.deploy()
 
 if __name__ == "__main__":
     main()
