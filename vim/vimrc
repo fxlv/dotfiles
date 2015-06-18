@@ -23,6 +23,8 @@ Plug 'chase/vim-ansible-yaml'
 Plug 'nvie/vim-flake8'
 " Puppet
 Plug 'rodjek/vim-puppet'
+" arduino syntax
+Plug 'sudar/vim-arduino-syntax'
 " other vim stuff
 Plug 'tpope/vim-surround'
 Plug 'lokaltog/vim-easymotion'
