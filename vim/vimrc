@@ -25,6 +25,15 @@ Plug 'nvie/vim-flake8'
 Plug 'rodjek/vim-puppet'
 " arduino syntax
 Plug '4Evergreen4/vim-hardy'
+"
+" plugin for arduino-ino
+" install 'ino' first!
+Plug 'jplaut/vim-arduino-ino' 
+" Basic usage:
+" <Leader>ac - Compile the current sketch.
+" <Leader>ad - Compile and deploy the current sketch.
+" <Leader>as - Open a serial port in screen.
+
 " other vim stuff
 Plug 'tpope/vim-surround'
 Plug 'lokaltog/vim-easymotion'
