@@ -24,7 +24,7 @@ Plug 'nvie/vim-flake8'
 " Puppet
 Plug 'rodjek/vim-puppet'
 " arduino syntax
-Plug 'sudar/vim-arduino-syntax'
+Plug '4Evergreen4/vim-hardy'
 " other vim stuff
 Plug 'tpope/vim-surround'
 Plug 'lokaltog/vim-easymotion'
