@@ -42,6 +42,11 @@ if [ -d "${HOME}/github/bin-scripts" ]; then
     PATH=${HOME}/github/bin-scripts:$PATH
 fi
 
+# if it exists, add ${HOME}/opt/bin to path 
+if [ -d "${HOME}/opt/bin" ]; then
+    PATH=${HOME}/opt/bin:$PATH
+fi
+
 export PATH
 
 if [ "$OSTYPE" == "freebsd11.0" ] || [ "$OSTYPE" == "freebsd10.1" ]; then
