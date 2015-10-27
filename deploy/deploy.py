@@ -142,6 +142,8 @@ def main():
         print "Unsupported platform"
         sys.exit(1)
     print "Platform:", platform
+    curlrc = Dotfile("curlrc", "curl/curlrc", ".curlrc")
+    curlrc.deploy()
     mostrc = Dotfile("mostrc", "most/mostrc", ".mostrc")
     mostrc.deploy()
     vimrc = Dotfile("vimrc", "vim/vimrc", ".vimrc")
