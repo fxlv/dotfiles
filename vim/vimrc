@@ -142,6 +142,8 @@ map <C-n> :NERDTreeToggle<CR>
 map <C-f> :NERDTreeFind<CR>
 
 " custom commands
+" run ./test.sh
+command T !./test.sh
 " execute the script
 command R !./%
 " execute as a python script
