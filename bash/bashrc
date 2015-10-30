@@ -116,3 +116,7 @@ if [ -e $SSH_AUTH_SOCK ]; then
         ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
     fi
 fi
+
+
+
+alias activatevenv="source venv/bin/activate"
