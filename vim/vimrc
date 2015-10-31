@@ -144,6 +144,8 @@ map <C-f> :NERDTreeFind<CR>
 " custom commands
 " run ./test.sh
 command T !./test.sh
+" run pylint on the current file
+command L ! pylint ./%
 " execute the script
 command R !./%
 " execute as a python script
