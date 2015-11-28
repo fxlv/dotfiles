@@ -7,7 +7,6 @@ import sys
 
 
 class Dotfile:
-
     def __init__(self, name, src, dst, compile_dotfile_script=None):
         self.name = name
         self.src = src
@@ -38,7 +37,7 @@ class Dotfile:
             os.system(compile_script)
         else:
             print "Warning"
-            warn_msg="Compile script {0} does not exist!"
+            warn_msg = "Compile script {0} does not exist!"
             print warn_msg.format(self.compile_dotfile_script)
 
     def __repr__(self):
@@ -137,7 +136,7 @@ def main():
     elif uname_string == "FreeBSD":
         platform = "FreeBSD"
     elif uname_string == "CYGWIN_NT-10.0-WOW":
-	platform = "Cygwin"
+        platform = "Cygwin"
     else:
         print "Unsupported platform"
         sys.exit(1)
@@ -152,17 +151,19 @@ def main():
     screen.deploy()
     git = Dotfile("gitconfig", "git/gitconfig", ".gitconfig")
     git.deploy()
-    bash_profile = Dotfile("bash_profile",
-                           "bash/bash_profile", ".bash_profile")
+    bash_profile = Dotfile("bash_profile", "bash/bash_profile",
+                           ".bash_profile")
     bash_profile.deploy()
     colors = Dotfile("colors", "bash/colors", ".colors")
     colors.deploy()
     bashrc = Dotfile("bashrc", "bash/bashrc", ".bashrc")
     bashrc.deploy()
-    bash_aliases = Dotfile("bash_aliases",
-                           "bash/bash_aliases", ".bash_aliases")
+    bash_aliases = Dotfile("bash_aliases", "bash/bash_aliases",
+                           ".bash_aliases")
     bash_aliases.deploy()
-    ssh_config = Dotfile("ssh config", "ssh/ssh_config", ".ssh/config",
+    ssh_config = Dotfile("ssh config",
+                         "ssh/ssh_config",
+                         ".ssh/config",
                          compile_dotfile_script="compile.sh")
     ssh_config.deploy()
     # Ansiblerc is the same on all platforms
@@ -185,6 +186,7 @@ def main():
         # mc and tmux are only used on linux and freebsd
         mc = Dotfile("mc", "mc/ini", ".config/mc/ini")
         mc.deploy()
+
 
 if __name__ == "__main__":
     main()
