@@ -130,3 +130,8 @@ if [ -e /usr/local/bin/docker-machine ]; then
     fi
 fi
 
+if which ssh-when-up > /dev/null; then
+    echo "Using ssh-when-up script instead of ssh"
+    alias ssh="ssh-when-up"
+fi
+
