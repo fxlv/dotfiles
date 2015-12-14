@@ -130,8 +130,14 @@ if [ -e /usr/local/bin/docker-machine ]; then
     fi
 fi
 
-if which ssh-when-up > /dev/null; then
-    echo "Using ssh-when-up script instead of ssh"
-    alias ssh="ssh-when-up"
+# if there's ssh-when-up.py present, use that for SSHing
+# however sometimes pure ssh is needed and for theses cases
+# create an alias 'ssh_original' 
+if which ssh-when-up.py > /dev/null; then
+    full_ssh_path=$(which ssh)
+    echo "Using ssh-when-up.py script instead of ssh"
+    alias ssh="ssh-when-up.py"
+    alias ssh_original=$full_ssh_path
+
 fi
 
