@@ -136,8 +136,12 @@ fi
 if type ssh-when-up.py > /dev/null; then
     if [ -e /bin/ssh ]; then
         full_ssh_path=/bin/ssh
-        alias ssh_original=$full_ssh_path
     fi
+
+    if [ -e /usr/bin/ssh ]; then 
+        full_ssh_path=/usr/bin/ssh
+    fi
+    alias ssh_original=$full_ssh_path
     echo "Using ssh-when-up.py script instead of ssh"
     alias ssh="ssh-when-up.py"
 
