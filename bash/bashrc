@@ -147,3 +147,12 @@ if type ssh-when-up.py > /dev/null; then
 
 fi
 
+# setup golang environment
+if type go > /dev/null; then
+    export GOPATH=$HOME/golang
+    if [ ! -e $GOPATH ]; then
+        echo "Your GOPATH is missing, so I will create it"
+        mkdir $GOPATH
+    fi
+    echo "Setting up \$GOPATH to $GOPATH"
+fi
