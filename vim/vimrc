@@ -25,6 +25,9 @@ Plug 'nvie/vim-flake8'
 Plug 'rodjek/vim-puppet'
 " arduino syntax
 Plug '4Evergreen4/vim-hardy'
+" vim-go plugin for golang
+" once installed, run :GoInstallBinaries and it'll install various go binaries
+Plug 'fatih/vim-go'
 "
 " plugin for arduino-ino
 " install 'ino' first!
@@ -153,3 +156,4 @@ command P ! python ./%
 " validate puppet manifest
 command Pupp ! puppet parser validate %
 
+map g :GoRun<CR>
