@@ -133,7 +133,7 @@ fi
 # if there's ssh-when-up.py present, use that for SSHing
 # however sometimes pure ssh is needed and for theses cases
 # create an alias 'ssh_original' 
-if type ssh-when-up.py > /dev/null; then
+if type ssh-when-up.py > /dev/null 2> /dev/null; then
     if [ -e /bin/ssh ]; then
         full_ssh_path=/bin/ssh
     fi
@@ -148,7 +148,7 @@ if type ssh-when-up.py > /dev/null; then
 fi
 
 # setup golang environment
-if type go > /dev/null; then
+if type go > /dev/null 2> /dev/null; then
     export GOPATH=$HOME/golang
     if [ ! -e $GOPATH ]; then
         echo "Your GOPATH is missing, so I will create it"
