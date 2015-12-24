@@ -1,3 +1,7 @@
+# to avoid breaking SCP transfers only apply .bashrc to interactive sessions
+if tty -s; then
+
+
 if [ -e "$HOME/.colors" ]; then
     source "$HOME/.colors"
 fi
@@ -155,4 +159,7 @@ if type go > /dev/null 2> /dev/null; then
         mkdir $GOPATH
     fi
     echo "Setting up \$GOPATH to $GOPATH"
+fi
+
+# end of tty conditional
 fi
