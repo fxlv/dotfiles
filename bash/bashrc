@@ -51,6 +51,13 @@ if [ -d "${HOME}/opt/bin" ]; then
     PATH=${HOME}/opt/bin:$PATH
 fi
 
+
+# add local python bin dir to path on OSX if it exists
+if [ -d ${HOME}/Library/Python/2.7/bin ]; then
+    PATH=${HOME}/Library/Python/2.7/bin:$PATH 
+    echo "${HOME}/Library/Python/2.7/bin added"
+fi
+
 export PATH
 
 if [ "$OSTYPE" == "freebsd11.0" ] || [ "$OSTYPE" == "freebsd10.1" ]; then
@@ -159,4 +166,10 @@ if type go > /dev/null; then
         mkdir $GOPATH
     fi
     echo "Setting up \$GOPATH to $GOPATH"
+fi
+
+
+powerlinesh="/Users/fx/Library/Python/2.7/lib/python/site-packages/powerline/bindings/bash/powerline.sh"
+if [ -e "$powerlinesh" ]; then
+. /Users/fx/Library/Python/2.7/lib/python/site-packages/powerline/bindings/bash/powerline.sh
 fi
