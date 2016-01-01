@@ -15,6 +15,10 @@ if [ -e "$HOME/.ansiblerc" ]; then
     source "$HOME/.ansiblerc"
 fi
 
+# set locale
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
 # common settings
 # big hist file is good for lazy (or forgetful) admins
 HISTFILESIZE=10000
