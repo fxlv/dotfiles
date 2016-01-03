@@ -178,6 +178,9 @@ def main():
         xmodmap.deploy()
         bash_mac = Dotfile("bash_mac", "bash/bash_mac", ".bash_mac")
         bash_mac.deploy()
+        # I use powerline on OSX only, for now
+        tmuxpowerline = Dotfile("tmuxpowerline", "tmux/tmux.powerline.osx.conf", ".tmux.powerline.osx.conf")
+        tmuxpowerline.deploy()
     elif platform == "Linux" or platform == "FreeBSD":
         # on FreeBSD I use .xinitrc to start up x
         if platform == "FreeBSD":
