@@ -44,7 +44,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'ervandew/supertab' 
 Plug 'scrooloose/nerdtree'
-Plug 'bling/vim-airline' 
+" disabling airline while I play with powerline
+"Plug 'bling/vim-airline' 
 Plug 'altercation/vim-colors-solarized'
 " YCM needs it's installer to be called as well
 Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
@@ -58,6 +59,12 @@ Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 " If you are getting some python exceptions, check if python supports SSL
 " I have seen errors when python is built with LibreSSL
 call plug#end()
+
+" for powerline, make sure it is installed and you need to provide path to
+" bindings 
+if has('mac')
+set rtp+=$HOME/Library/Python/2.7/lib/python/site-packages/powerline/bindings/vim
+endif
 "
 " additionally for syntax checking/linting install:
 " python:
