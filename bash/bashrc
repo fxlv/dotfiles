@@ -36,6 +36,9 @@ PS1='[\u@\h \w]\$ '
 if [ -d "${HOME}/bin" ]; then
     PATH=${HOME}/bin:$PATH
 fi
+if [ -d "${HOME}/.local/bin" ]; then
+    PATH=${HOME}/.local/bin:$PATH
+fi
 if [ -d "${HOME}/opt/bin" ]; then
     PATH=${HOME}/opt/bin:$PATH
 fi
@@ -172,9 +175,16 @@ if type go > /dev/null 2> /dev/null; then
     echo "Setting up \$GOPATH to $GOPATH"
 fi
 
+# install powerline:  pip install --user git+git://github.com/powerline/powerline
 powerlinesh="/Users/fx/Library/Python/2.7/lib/python/site-packages/powerline/bindings/bash/powerline.sh"
+powerlinesh_linux="./.local/lib/python2.7/site-packages/powerline/bindings/bash/powerline.sh"
+
 if [ -e "$powerlinesh" ]; then
 . /Users/fx/Library/Python/2.7/lib/python/site-packages/powerline/bindings/bash/powerline.sh
+fi
+
+if [ -e "$powerlinesh_linux" ]; then
+    . $powerlinesh_linux
 fi
 
 # end of tty conditional
