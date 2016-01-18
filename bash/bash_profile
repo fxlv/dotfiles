@@ -1,5 +1,5 @@
 echo ".bash_profile loaded"
-source $HOME/.bashrc
+source "$HOME/.bashrc"
 
 if [ -e /etc/debian_version ]; then
     if [ -e /usr/games/fortune ]; then

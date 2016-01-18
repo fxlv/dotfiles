@@ -60,7 +60,7 @@ fi
 
 
 # add local python bin dir to path on OSX if it exists
-if [ -d ${HOME}/Library/Python/2.7/bin ]; then
+if [ -d "${HOME}/Library/Python/2.7/bin" ]; then
     PATH=${HOME}/Library/Python/2.7/bin:$PATH 
     echo "${HOME}/Library/Python/2.7/bin added"
 fi
@@ -127,11 +127,11 @@ if [ "$SSH_TTY" -o "$DESKTOP_SESSION" -o "$OSTYPE" == "darwin14" ]; then
 fi
 
 
-if [ -e $SSH_AUTH_SOCK ]; then
+if [ -e "$SSH_AUTH_SOCK" ]; then
     if [[ -e ~/.ssh/ssh_auth_sock ]]; then 
         echo "SSH_AUTH_SOCK is OK"
     else
-        ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
+        ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
     fi
 fi
 

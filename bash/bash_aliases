@@ -7,9 +7,9 @@ alias ll='/bin/ls -lashG'
 
 _ssh_auth_save() {
         screen_dir="$HOME/.screen"
-        if [ ! -d $screen_dir ]; then
+        if [ ! -d "$screen_dir" ]; then
             echo "Creating $screen_dir directory"
-            mkdir $screen_dir
+            mkdir "$screen_dir"
         fi
         ln -sf "$SSH_AUTH_SOCK" "${screen_dir}/ssh-auth-sock.$HOSTNAME"
 }
