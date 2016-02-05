@@ -83,7 +83,7 @@ elif [ "$OSTYPE" == "linux-gnu" ]; then
     else
         echo "Please consider installing 'most' or 'less'"
     fi
-elif [ "$OSTYPE" == "darwin14" ]; then
+elif [ "$OSTYPE" == "darwin15" ]; then
     if [ -x /usr/local/bin/most ]; then
         export PAGER=most
     elif [ -x /usr/bin/less ]; then
@@ -122,7 +122,7 @@ if (( SSH_AGENT_PID )); then
     fi
 fi
 # avoid breaking SCP
-if [ "$SSH_TTY" -o "$DESKTOP_SESSION" -o "$OSTYPE" == "darwin14" ]; then
+if [ "$SSH_TTY" -o "$DESKTOP_SESSION" -o "$OSTYPE" == "darwin15" ]; then
     echo ".bashrc loaded"
 fi
 
