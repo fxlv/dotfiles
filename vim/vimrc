@@ -44,6 +44,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'ervandew/supertab' 
 Plug 'scrooloose/nerdtree'
+Plug 'keith/tmux.vim' 
 " disabling airline while I play with powerline
 "Plug 'bling/vim-airline' 
 Plug 'altercation/vim-colors-solarized'
