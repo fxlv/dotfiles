@@ -33,6 +33,10 @@ HISTTIMEFORMAT="[ %d.%m.%y %T ] "
 HISTCONTROL=ignoredups
 PS1='[\u@\h \w]\$ '
 
+if [ -d /opt/libressl/lib ]; then
+    export LD_LIBRARY_PATH=/opt/libressl/lib
+fi
+
 if [ -d "${HOME}/bin" ]; then
     PATH=${HOME}/bin:$PATH
 fi
