@@ -18,6 +18,9 @@ fi
 if [ -e "$HOME/.ansiblerc" ]; then
     source "$HOME/.ansiblerc"
 fi
+if [ -e "$HOME/.fzf.bash" ]; then
+    source "$HOME/.fzf.bash"
+fi
 
 # set locale
 export LC_ALL=en_US.UTF-8
@@ -25,8 +28,8 @@ export LANG=en_US.UTF-8
 
 # common settings
 # big hist file is good for lazy (or forgetful) admins
-HISTFILESIZE=10000
-HISTSIZE=10000
+HISTFILESIZE=20000
+HISTSIZE=20000
 # add timestamps to history entries
 HISTTIMEFORMAT="[ %d.%m.%y %T ] "
 # no point in saving dupes
@@ -193,3 +196,5 @@ fi
 
 # end of tty conditional
 fi
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
