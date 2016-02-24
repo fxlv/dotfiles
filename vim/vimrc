@@ -165,3 +165,5 @@ command P ! python ./%
 command Pupp ! puppet parser validate %
 
 map g :GoRun<CR>
+" map space to center screen on current line
+nmap <space> zz
