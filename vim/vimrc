@@ -7,6 +7,8 @@
 "
 au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/indent/yaml.vim
 
+
+
 call plug#begin()
 Plug 'scrooloose/syntastic'
 "node.js and javascript
@@ -111,8 +113,9 @@ endif
 
 hi Search ctermfg=31 ctermbg=157
 highlight OverLength ctermbg=red ctermfg=white
-set colorcolumn=81
-highlight ColorColumn ctermbg=DarkGray
+" Color column can be annoying so I use OverLenght highlight instead
+"set colorcolumn=81
+"highlight ColorColumn ctermbg=DarkGray
 
 set backspace =2
 set visualbell
@@ -166,3 +169,6 @@ command P ! python ./%
 command Pupp ! puppet parser validate %
 
 map g :GoRun<CR>
+
+" remap ; to : to avoid typing SHIFT + ; 
+nnoremap ; :
