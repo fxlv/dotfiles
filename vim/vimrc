@@ -167,8 +167,8 @@ command R !./%
 command P ! python ./%
 " validate puppet manifest
 command Pupp ! puppet parser validate %
-
 map g :GoRun<CR>
-
 " remap ; to : to avoid typing SHIFT + ; 
 nnoremap ; :
+" map space to center screen on current line
+nmap <space> zz
