@@ -21,6 +21,12 @@ fi
 if [ -e "$HOME/.fzf.bash" ]; then
     source "$HOME/.fzf.bash"
 fi
+# 
+# azure --completion >> ~/.azure.completion
+#
+if [ -e "$HOME/.azure.completion" ]; then
+    source "$HOME/.azure.completion"
+fi
 
 # set locale
 export LC_ALL=en_US.UTF-8
