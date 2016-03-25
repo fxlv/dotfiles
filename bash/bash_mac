@@ -1,4 +1,10 @@
 
+# http://postgresapp.com/documentation/cli-tools.html 
+if [ -d "/Applications/Postgres.app/Contents/Versions/latest/bin" ]; then
+    export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
+    echo "Postgres.app added to PATH"
+fi
+
 #export EDITOR="sublime -w"
 alias vim="/usr/local/Cellar/vim/7.4.430_1/bin/vim"
 alias sublime='/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl'
