@@ -153,12 +153,12 @@ fi
 alias activatevenv="source venv/bin/activate"
 if [ -e /usr/local/bin/docker-machine ]; then
     if docker-machine status default| grep Running > /dev/null; then
-        echo "Docker machine is running."
+        echo "Docker machine $GREEN OK $DEFAULT"
         echo "Run 'denv' to activate Docker environment"
         alias denv="eval \"$(docker-machine env default)\""
         alias dshell="docker run -ti fxlv/debian_wheezy:shellbox bash"
     else
-        echo "Docker machine is not available, sir"
+        echo "Docker machine $RED not available $DEFAULT"
     fi
 fi
 
