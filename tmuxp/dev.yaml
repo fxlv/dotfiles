@@ -1,0 +1,12 @@
+session_name: dev
+windows:
+- focus: 'true'
+  layout: 6889,179x33,0,0{114x33,0,0,1,64x33,115,0[64x16,115,0,2,64x16,115,17,4]}
+  options:
+    automatic-rename: 'off'
+  panes:
+  - focus: true
+  - 
+  - 
+  start_directory: /Users/fx
+  window_name: Shell

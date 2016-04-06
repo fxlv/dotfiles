@@ -172,6 +172,8 @@ def main():
     # Tmux config is the same everywhere
     tmux = Dotfile("tmux", "tmux/tmux.conf", ".tmux.conf")
     tmux.deploy()
+    tmux = Dotfile("tmuxp", "tmuxp/dev.yaml", ".tmuxp/dev.yaml")
+    tmux.deploy()
     # OSX will have some specifics
     if platform == "OSX":
         xmodmap = Dotfile("Xmodmap", "osx/Xmodmap", ".Xmodmap")
@@ -179,7 +181,9 @@ def main():
         bash_mac = Dotfile("bash_mac", "bash/bash_mac", ".bash_mac")
         bash_mac.deploy()
         # I use powerline on OSX only, for now
-        tmuxpowerline = Dotfile("tmuxpowerline", "tmux/tmux.powerline.osx.conf", ".tmux.powerline.osx.conf")
+        tmuxpowerline = Dotfile("tmuxpowerline",
+                                "tmux/tmux.powerline.osx.conf",
+                                ".tmux.powerline.osx.conf")
         tmuxpowerline.deploy()
     elif platform == "Linux" or platform == "FreeBSD":
         # on FreeBSD I use .xinitrc to start up x
