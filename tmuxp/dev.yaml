@@ -8,5 +8,5 @@ windows:
   - focus: true
   - 
   - 
-  start_directory: /Users/fx
+  start_directory: $HOME
   window_name: Shell
