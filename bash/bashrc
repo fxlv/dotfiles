@@ -126,7 +126,7 @@ fi
 
 # Add ssh-key to ssh-agent if this is one of the workstations
 # I assume that ssh-agent is started by something else (like .xinitrc).
-if (( SSH_AGENT_PID )); then
+if (( "SSH_AGENT_PID" )); then
     if ssh-add -L > /dev/null; then
         echo "SSH key already loaded"
     else
