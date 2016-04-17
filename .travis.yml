@@ -10,5 +10,5 @@ before_script:
   - sudo pip install flake8
 
 script:
-  - shellcheck -e SC2034 bash/*
+ - shellcheck -e SC2034,SC2139 bash/*
  - flake8 deploy/deploy.py
