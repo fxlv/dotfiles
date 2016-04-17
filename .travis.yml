@@ -1,0 +1,12 @@
+language: bash
+
+os:
+  - linux
+
+before_script:
+  - echo "deb http://archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe" | sudo tee /etc/apt/sources.list
+  - sudo apt-get update
+  - sudo apt-get install shellcheck
+
+script:
+ - shellcheck bash/*
