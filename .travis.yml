@@ -1,0 +1,9 @@
+language: bash
+
+addons:
+  apt:
+    packages:
+    - shellcheck
+
+script:
+ - shellcheck *.sh
