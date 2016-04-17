@@ -11,6 +11,7 @@ au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/indent/yaml.vim
 
 call plug#begin()
 Plug 'scrooloose/syntastic'
+let g:syntastic_yaml_checkers = ['yamllint']
 "node.js and javascript
 " make sure you have jshint installed: npm install -g jshint
 Plug 'moll/vim-node'
