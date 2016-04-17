@@ -9,4 +9,4 @@ before_script:
   - sudo apt-get install shellcheck
 
 script:
- - shellcheck *.sh
+ - shellcheck bash/*
