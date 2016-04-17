@@ -173,7 +173,7 @@ if type ssh-when-up.py > /dev/null 2> /dev/null; then
     if [ -e /usr/bin/ssh ]; then 
         full_ssh_path=/usr/bin/ssh
     fi
-    alias ssh_original=$full_ssh_path
+    alias ssh_original="$full_ssh_path"
     echo "Using ssh-when-up.py script instead of ssh"
     alias ssh="ssh-when-up.py"
 
@@ -182,9 +182,9 @@ fi
 # setup golang environment
 if type go > /dev/null 2> /dev/null; then
     export GOPATH=$HOME/golang
-    if [ ! -e $GOPATH ]; then
+    if [ ! -e "$GOPATH" ]; then
         echo "Your GOPATH is missing, so I will create it"
-        mkdir $GOPATH
+        mkdir "$GOPATH"
     fi
     echo "Setting up \$GOPATH to $GOPATH"
 fi

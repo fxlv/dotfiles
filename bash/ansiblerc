@@ -1,4 +1,4 @@
-if [ $(uname) == "Darwin" ]; then
+if [ "$(uname)" == "Darwin" ]; then
     echo "Setting up OSX ansible environment"
     export ANSIBLE_PER_HOST_LOG_DIR="${HOME}/github/ansible/log"
     alias ansible-playbook='ansible-playbook --extra-vars="log_dir=${HOME}/github/ansible/log"' 
