@@ -49,7 +49,7 @@ class Dotfile:
     def is_broken_link(self):
         """
         Return True for broken links.
-        If file exists() reports False but lexists() reports True, 
+        If file exists() reports False but lexists() reports True,
         then most likely this is a broken symlink
         """
         if not os.path.exists(self.dst):
