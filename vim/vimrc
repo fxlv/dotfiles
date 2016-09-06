@@ -46,6 +46,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'ervandew/supertab' 
 Plug 'scrooloose/nerdtree'
+Plug 'elzr/vim-json'
 Plug 'keith/tmux.vim' 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 " disabling airline while I play with powerline

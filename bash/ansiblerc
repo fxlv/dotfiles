@@ -12,4 +12,5 @@ export ANSIBLE_HOST_KEY_CHECKING=False
 alias ansible-env-setup=". ${HOME}/opt/ansible/hacking/env-setup"
 
 alias ansible-show-puppet-changed='find log/ -name "puppetrun*changed.log" -mtime -1 -exec ls -lash {} \;|sort -k 10' 
+alias ansible-git-update="git pull --rebase && git submodule update --init --recursive"
 

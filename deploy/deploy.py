@@ -46,9 +46,21 @@ class Dotfile:
     def __str__(self):
         return self.name
 
+    def is_broken_link(self):
+        """
+        Return True for broken links.
+        If file exists() reports False but lexists() reports True,
+        then most likely this is a broken symlink
+        """
+        if not os.path.exists(self.dst):
+            if os.path.lexists(self.dst):
+                return True
+        return False
+
     def exists(self):
         "Check if the destination file exists"
         if os.path.exists(self.dst):
+            print "{} exists".format(self.dst)
             return True
         return False
 
@@ -122,6 +134,10 @@ class Dotfile:
                 print "Skipping {0}".format(self.name)
                 return
 
+        else:
+            if self.is_broken_link():
+                print "Broken symlink found for {}".format(self.dst)
+                os.unlink(self.dst)
         # finally symlink the dotfile
         print "Symlinking {0} -> {1}".format(self.src, self.dst)
         os.symlink(self.src, self.dst)
