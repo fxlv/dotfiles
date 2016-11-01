@@ -29,9 +29,22 @@ if [ -e "$HOME/.azure.completion" ]; then
 fi
 
 # set locale
-if uname -r |grep -q docker; then
+if uname -r |grep -q docker; then # boot2docker kernel
     echo "Setting locale: LC_ALL=C"
     export LC_ALL=C
+
+    if pgrep ssh-agent; then
+        echo "ssh-agent already running"
+        source ~/.ssh-agent.env
+    else
+        echo "Started ssh-agent"
+        ssh-agent -a ~/.ssh-agent.sock > ~/.ssh-agent.env
+        source ~/.ssh-agent.env
+        echo "Please add your key"
+        ssh-add
+    fi
+
+
 else
     export LC_ALL=en_US.UTF-8
     export LANG=en_US.UTF-8
@@ -114,7 +127,6 @@ export HISTFILESIZE HISTSIZE HISTTIMEFORMAT PS1
 # some basic env variables
 export VAGRANT_DEFAULT_PROVIDER=virtualbox
 export EDITOR="vim"
-
 
 if [ "$OSTYPE" == "cygwin" ]; then
     echo "Running in cygwin, brawe man."
