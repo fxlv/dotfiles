@@ -9,6 +9,7 @@ au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/indent/yaml.vim
 
 
 
+
 call plug#begin()
 Plug 'scrooloose/syntastic'
 let g:syntastic_yaml_checkers = ['yamllint']
@@ -20,8 +21,6 @@ Plug 'wookiehangover/jshint.vim'
 " Additionally, after installing tern_for_vim, go to the plugin
 " directory and run 'npm install'
 Plug 'marijnh/tern_for_vim'
-"Ansible
-Plug 'chase/vim-ansible-yaml'
 " Python
 Plug 'nvie/vim-flake8'
 " Puppet
@@ -174,3 +173,10 @@ map g :GoRun<CR>
 nnoremap ; :
 " map space to center screen on current line
 nmap <space> zz
+
+
+" indenting for YAML
+filetype plugin indent on
+autocmd FileType yaml setl indentkeys-=<:>
+autocmd FileType yaml setl shiftwidth=2
+autocmd FileType yaml setl tabstop=2
