@@ -11,8 +11,8 @@ class Dotfile:
         self.name = name
         self.src = src
         self.dst = dst
-        cwd = os.getcwd()
-        self.dotfiles_directory = os.path.dirname(cwd)
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        self.dotfiles_directory = os.path.dirname(script_dir)
         self.home = os.environ.get("HOME")
         # prepend 'dotfiles_directory' to the dotfile source
         self.src = "{0}/{1}".format(self.dotfiles_directory, self.src)
