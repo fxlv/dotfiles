@@ -14,6 +14,8 @@ class Dotfile:
         script_dir = os.path.dirname(os.path.realpath(__file__))
         self.dotfiles_directory = os.path.dirname(script_dir)
         self.home = os.environ.get("HOME")
+        print "DEBUG: PRE self.src: {0}".format(self.src)
+        print "DEBUG: PRE self.dst: {0}".format(self.dst)
         # prepend 'dotfiles_directory' to the dotfile source
         self.src = "{0}/{1}".format(self.dotfiles_directory, self.src)
         # we can handle both relative and absolute path in home directory
@@ -23,6 +25,7 @@ class Dotfile:
         self.dst_parent_dir = os.path.dirname(self.dst)
         self.debug = True
         self.compile_dotfile_script = compile_dotfile_script
+        print "DEBUG: self.src: {0}".format(self.src)
         print "DEBUG: self.dst: {0}".format(self.dst)
         print "DEBUG: self.dst_parent_dir: {0}".format(self.dst_parent_dir)
 
@@ -31,6 +34,7 @@ class Dotfile:
             msg = "Compiling {0} dotfile by executing {1}"
             print msg.format(self.name, self.compile_dotfile_script)
         dotfile_path = os.path.dirname(self.src)
+        cur_dir = os.getcwd()
         os.chdir(dotfile_path)
         if os.path.exists(self.compile_dotfile_script):
             compile_script = "./{0}".format(self.compile_dotfile_script)
@@ -39,6 +43,8 @@ class Dotfile:
             print "Warning"
             warn_msg = "Compile script {0} does not exist!"
             print warn_msg.format(self.compile_dotfile_script)
+        # return to the original directory
+        os.chdir(cur_dir)
 
     def __repr__(self):
         return "Dotfile: {0}".format(self.name)
