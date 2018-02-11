@@ -28,23 +28,34 @@ if [ -e "$HOME/.azure.completion" ]; then
     source "$HOME/.azure.completion"
 fi
 
-# try to detect docker container
-boot2docker=$(uname -r |grep -c docker)
-moby=$(uname -r |grep -c moby)
-if (( boot2docker == 1 || moby == 1 )); then
-    echo "You appear to be running in Docker"
+# set up the environment in a docker container or WSL session
+boot2docker=$(uname -r |grep -c docker) # docker
+moby=$(uname -r |grep -c moby) # docker
+wsl=$(uname -r | grep -c Microsoft ) # Windows Subsystem for Linux
+if (( boot2docker == 1 || moby == 1 || wsl == 1)); then
+    echo "Environment recognized, great stuff."
     echo "Setting locale: LC_ALL=C"
     export LC_ALL=C
-
+    
+    # check if ssh-agent is already running, if not, start one up
     if pgrep ssh-agent; then
         echo "ssh-agent already running"
         source ~/.ssh-agent.env
     else
-        echo "Started ssh-agent"
+        if [ -S ~/.ssh-agent.sock ]; then
+            echo "ssh-agent socket exists but agent itself not running"
+            echo -n "removing old ssh-agent socket "
+            rm -v ~/.ssh-agent.sock
+        fi
+        echo "Starting ssh-agent"
         ssh-agent -a ~/.ssh-agent.sock > ~/.ssh-agent.env
-        source ~/.ssh-agent.env
-        echo "Please add your key"
-        ssh-add
+        if pgrep ssh-agent; then
+            source ~/.ssh-agent.env
+            echo "Please add your key"
+            ssh-add
+        else
+            echo "Could not start ssh-agent"
+        fi
     fi
 else
     export LC_ALL=en_US.UTF-8
@@ -231,3 +242,7 @@ fi
 fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+
+chmod -v 0640 ~/.ssh/config
+
