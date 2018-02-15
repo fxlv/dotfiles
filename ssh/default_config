@@ -1,6 +1,15 @@
 ForwardAgent yes
+AddressFamily inet
+ConnectionAttempts 5
+ConnectTimeout 30
+ControlPath ~/.ssh/cm/%r@%h:%p
+ControlPersist 1m
+StrictHostKeyChecking no
+ControlMaster auto
+TCPKeepAlive no
+ServerAliveInterval 60
+ServerAliveCountMax 10
 
 Host localhost
 UserKnownHostsFile=/dev/null
 StrictHostKeyChecking no
-
