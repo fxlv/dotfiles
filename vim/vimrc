@@ -180,8 +180,6 @@ filetype plugin indent on
 autocmd FileType yaml setl indentkeys-=<:>
 autocmd FileType yaml setl shiftwidth=2
 autocmd FileType yaml setl tabstop=2
-" To have arrow keys working, set:
-" To have arrow keys working, set:
 set background=dark
 set term=xterm-256color
 colo solarized
