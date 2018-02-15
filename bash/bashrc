@@ -245,4 +245,4 @@ fi
 
 
 chmod -v 0640 ~/.ssh/config
-
+mkdir -p  ~/.ssh/cm/
