@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+# vim: filetype=sh
 
 # http://postgresapp.com/documentation/cli-tools.html 
 if [ -d "/Applications/Postgres.app/Contents/Versions/latest/bin" ]; then

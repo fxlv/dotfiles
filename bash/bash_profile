@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+# vim: filetype=sh
 echo ".bash_profile loaded"
 source "$HOME/.bashrc"
 

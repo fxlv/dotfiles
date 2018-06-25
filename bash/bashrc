@@ -1,3 +1,6 @@
+# shellcheck shell=bash
+# vim: filetype=sh
+
 # to avoid breaking SCP transfers only apply .bashrc to interactive sessions
 if tty -s; then
 
@@ -170,7 +173,7 @@ if (( "SSH_AGENT_PID" )); then
     fi
 fi
 # avoid breaking SCP
-if [ "$SSH_TTY" -o "$DESKTOP_SESSION" -o "$OSTYPE" == "darwin15" ]; then
+if [ "$SSH_TTY" == "darwin15" ] || [ "$DESKTOP_SESSION" == "darwin15" ] || [ "$OSTYPE" == "darwin15" ]; then
     echo ".bashrc loaded"
 fi
 
