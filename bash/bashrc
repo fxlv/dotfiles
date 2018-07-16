@@ -249,3 +249,9 @@ fi
 
 chmod -v 0640 ~/.ssh/config
 mkdir -p  ~/.ssh/cm/
+
+# check if sudo session is already active
+# this makes sense on machines where /etc/sudoers has timestamp_type="global"
+if sudo -vn 2> /dev/null; then
+    echo "You have an active sudo session"
+fi
