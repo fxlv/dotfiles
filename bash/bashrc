@@ -149,6 +149,9 @@ export HISTFILESIZE HISTSIZE HISTTIMEFORMAT PS1
 export VAGRANT_DEFAULT_PROVIDER=virtualbox
 export EDITOR="vim"
 
+
+
+
 if [ "$OSTYPE" == "cygwin" ]; then
     echo "Running in cygwin, brawe man."
     if ssh-add -L > /dev/null; then
@@ -162,16 +165,31 @@ if [ "$OSTYPE" == "cygwin" ]; then
     
 fi
 
+# make sure ssh-agent is running and is being used
+if ! pgrep ssh-agent; then
+    echo "ssh agent not running, let's start it up"
+    ssh-agent > .ssh_agent
+fi 
+
+if [ -e ~/.ssh_agent ]; then
+    source ~/.ssh_agent
+fi
+
 # Add ssh-key to ssh-agent if this is one of the workstations
 # I assume that ssh-agent is started by something else (like .xinitrc).
-if (( "SSH_AGENT_PID" )); then
+if [ -n "$SSH_AGENT_PID" ]; then
     if ssh-add -L > /dev/null; then
         echo "SSH key already loaded"
     else
-        echo "Adding ssh key to ssh-agent"
+      echo "Adding ssh key to ssh-agent"
         ssh-add
     fi
+else
+    echo "SSH_AGENT_PID variable does not exist"
 fi
+
+
+
 # avoid breaking SCP
 if [ "$SSH_TTY" == "darwin15" ] || [ "$DESKTOP_SESSION" == "darwin15" ] || [ "$OSTYPE" == "darwin15" ]; then
     echo ".bashrc loaded"
@@ -182,6 +200,7 @@ if [ -e "$SSH_AUTH_SOCK" ]; then
     if [[ -e ~/.ssh/ssh_auth_sock ]]; then 
         echo "SSH_AUTH_SOCK is OK"
     else
+        echp "Setting up SSH_AUTH_SOCK"
         ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
     fi
 fi
