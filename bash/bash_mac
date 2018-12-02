@@ -26,7 +26,7 @@ fi
 
 # is there a Docker machine running in Parralels?
 DOCKER_IP=10.211.55.3
-export $DOCKER_IP
+export DOCKER_IP
 if fping -q -t 20 $DOCKER_IP; then
     if nc -z $DOCKER_IP 22 > /dev/null 2>&1; then
         if ssh $DOCKER_IP hostname | grep docker > /dev/null 2>&1; then
