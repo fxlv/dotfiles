@@ -31,6 +31,7 @@ if fping -q -t 20 $DOCKER_IP; then
     if nc -z $DOCKER_IP 22 > /dev/null 2>&1; then
         if ssh $DOCKER_IP hostname | grep docker > /dev/null 2>&1; then
             echo "$GREEN OK $DEFAULT Docker machine running on $DOCKER_IP"
+            alias docker="docker -H $DOCKER_IP:2376"
         fi
     else
         echo "$YELLOW WARN $DEFAULT Docker machine not responding to SSH"
