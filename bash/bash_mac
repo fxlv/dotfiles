@@ -7,8 +7,34 @@ if [ -d "/Applications/Postgres.app/Contents/Versions/latest/bin" ]; then
     echo "Postgres.app added to PATH"
 fi
 
-
 if [ -f /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code ]; then
     alias code="/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code"
     echo "VS Code alias added"
+fi
+
+if [ ! -e /usr/local/bin/gtimeout ]; then
+    echo "$YELLOW WARNING: $DEFAULT Please install 'coreutils' using HomeBrew"
+fi
+
+if [ ! -e /usr/local/bin/fping ]; then
+    echo "$YELLOW WARNING: $DEFAULT Please install 'fping' using HomeBrew"
+fi
+
+#
+# Detect Docker environment
+#
+
+# is there a Docker machine running in Parralels?
+DOCKER_IP=10.211.55.3
+export $DOCKER_IP
+if fping -q -t 20 $DOCKER_IP; then
+    if nc -z $DOCKER_IP 22 > /dev/null 2>&1; then
+        if ssh $DOCKER_IP hostname | grep docker > /dev/null 2>&1; then
+            echo "$GREEN OK $DEFAULT Docker machine running on $DOCKER_IP"
+        fi
+    else
+        echo "$YELLOW WARN $DEFAULT Docker machine not responding to SSH"
+    fi
+else
+    echo "$YELLOW WARN $DEFAULT Docker machine not running"
 fi

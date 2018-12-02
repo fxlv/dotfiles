@@ -8,22 +8,21 @@ if tty -s; then
 if [ -e "$HOME/.colors" ]; then
     source "$HOME/.colors"
 fi
+
 if [ -e "$HOME/.bash_aliases" ]; then
     source "$HOME/.bash_aliases"
 fi
-if [ -e "$HOME/.bash_mac" ]; then
-    source "$HOME/.bash_mac"
-    echo ".bash_mac loaded"
-fi
-if [ -e "$HOME/.bash_mac" ]; then
-    source "$HOME/.bash_mac"
-fi
+
+
+
 if [ -e "$HOME/.ansiblerc" ]; then
     source "$HOME/.ansiblerc"
 fi
+
 if [ -e "$HOME/.fzf.bash" ]; then
     source "$HOME/.fzf.bash"
 fi
+
 # 
 # azure --completion >> ~/.azure.completion
 #
@@ -41,7 +40,7 @@ if (( boot2docker == 1 || moby == 1 || wsl == 1)); then
     export LC_ALL=C
     
     # check if ssh-agent is already running, if not, start one up
-    if pgrep ssh-agent; then
+    if pgrep ssh-agent > /dev/null 2>&1; then
         echo "ssh-agent already running"
         source ~/.ssh-agent.env
     else
@@ -52,7 +51,7 @@ if (( boot2docker == 1 || moby == 1 || wsl == 1)); then
         fi
         echo "Starting ssh-agent"
         ssh-agent -a ~/.ssh-agent.sock > ~/.ssh-agent.env
-        if pgrep ssh-agent; then
+        if pgrep ssh-agent > /dev/null 2>&1; then
             source ~/.ssh-agent.env
             echo "Please add your key"
             ssh-add
@@ -135,7 +134,7 @@ elif [ "$OSTYPE" == "linux-gnu" ]; then
     else
         echo "Please consider installing 'most' or 'less'"
     fi
-elif [ "$OSTYPE" == "darwin15" ]; then
+elif [ "$OSTYPE" == "darwin18" ]; then
     if [ -x /usr/local/bin/most ]; then
         export PAGER=most
     elif [ -x /usr/bin/less ]; then
@@ -166,8 +165,8 @@ if [ "$OSTYPE" == "cygwin" ]; then
 fi
 
 # make sure ssh-agent is running and is being used
-if ! pgrep ssh-agent; then
-    echo "ssh agent not running, let's start it up"
+if ! pgrep ssh-agent > /dev/null 2>&1; then
+    echo "$YELLOW WARN $DEFAULT ssh agent not running, let's start it up"
     ssh-agent > .ssh_agent
 fi 
 
@@ -179,31 +178,25 @@ fi
 # I assume that ssh-agent is started by something else (like .xinitrc).
 if [ -n "$SSH_AGENT_PID" ]; then
     if ssh-add -L > /dev/null; then
-        echo "SSH key already loaded"
+        echo "$GREEN OK $DEFAULT SSH key already loaded"
     else
       echo "Adding ssh key to ssh-agent"
         ssh-add
     fi
 else
-    echo "SSH_AGENT_PID variable does not exist"
-fi
-
-
-
-# avoid breaking SCP
-if [ "$SSH_TTY" == "darwin15" ] || [ "$DESKTOP_SESSION" == "darwin15" ] || [ "$OSTYPE" == "darwin15" ]; then
-    echo ".bashrc loaded"
+    echo "$YELLOW WARN $DEFAULT SSH_AGENT_PID variable does not exist"
 fi
 
 
 if [ -e "$SSH_AUTH_SOCK" ]; then
     if [[ -e ~/.ssh/ssh_auth_sock ]]; then 
-        echo "SSH_AUTH_SOCK is OK"
+        echo "$GREEN OK $DEFAULT SSH_AUTH_SOCK is OK"
     else
         echp "Setting up SSH_AUTH_SOCK"
         ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
     fi
 fi
+
 
 
 
@@ -273,4 +266,11 @@ mkdir -p  ~/.ssh/cm/
 # this makes sense on machines where /etc/sudoers has timestamp_type="global"
 if sudo -vn 2> /dev/null; then
     echo "You have an active sudo session"
+fi
+
+
+
+if [ -e "$HOME/.bash_mac" ]; then
+    source "$HOME/.bash_mac"
+    echo ".bash_mac loaded"
 fi
