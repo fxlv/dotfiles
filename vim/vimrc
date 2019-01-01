@@ -52,6 +52,8 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 " disabling airline while I play with powerline
 "Plug 'bling/vim-airline' 
 Plug 'altercation/vim-colors-solarized'
+Plug 'nightsense/stellarized'
+Plug 'dracula/vim'
 " YCM needs it's installer to be called as well
 Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 " on FreeBSD, make sure you have clang36 (or clang36) and cmake installed
@@ -105,11 +107,16 @@ set hlsearch
 " for colors, see this awesome color table
 " https://github.com/guns/xterm-color-table.vim
 
-
 " use solarized colorscheme on my mac
+" use dracula everywhere else
+" another option I really like is stellarized light version
 if has('mac')
-set background=light
+set background=dark
+let g:solarized_termcolors=256
 colorscheme solarized
+else
+set termguicolors
+colorscheme dracula
 endif
 
 hi Search ctermfg=31 ctermbg=157
