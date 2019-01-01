@@ -63,9 +63,9 @@ else
     if [ "$OSTYPE" == "linux-gnu" ] || [ "$OSTYPE" == "linux-gnueabihf" ]; then
         locale_output=$(export LC_ALL=en_US.UTF-8 2>&1 | wc -l)
         if ((locale_output > 0)); then
-            echo "$YELLOW WARN $DEFAULT Are you missing locales? Consider running 'sudo locale-gen $LC_ALL'"
+            echo "$YELLOW WARN $DEFAULT Are you missing locales? Consider updating '/etc/locale.gen' by adding 'en_US.UTF-8 UTF-8' and then running 'sudo locale-gen $LC_ALL'"
         else
-            echo "$GREEN OK $DEFAULT locale set to $LC_ALL"
+            echo "$GREEN OK $DEFAULT locale set to en_US.UTF-8"
         fi
         export LANG=en_US.UTF-8
     fi
