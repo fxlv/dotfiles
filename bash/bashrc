@@ -60,7 +60,7 @@ if (( boot2docker == 1 || moby == 1 || wsl == 1)); then
         fi
     fi
 else
-    if [ "$OSTYPE" == "linux-gnu" ]; then
+    if [ "$OSTYPE" == "linux-gnu" ] || [ "$OSTYPE" == "linux-gnueabihf" ]; then
         locale_output=$(export LC_ALL=en_US.UTF-8 2>&1 | wc -l)
         if ((locale_output > 0)); then
             echo "$YELLOW WARN $DEFAULT Are you missing locales? Consider running 'sudo locale-gen $LC_ALL'"
