@@ -60,8 +60,15 @@ if (( boot2docker == 1 || moby == 1 || wsl == 1)); then
         fi
     fi
 else
-    export LC_ALL=en_US.UTF-8
-    export LANG=en_US.UTF-8
+    if [ "$OSTYPE" == "linux-gnu" ]; then
+        locale_output=$(export LC_ALL=en_US.UTF-8 2>&1 | wc -l)
+        if ((locale_output > 0)); then
+            echo "$YELLOW WARN $DEFAULT Are you missing locales? Consider running 'sudo locale-gen $LC_ALL'"
+        else
+            echo "$GREEN OK $DEFAULT locale set to $LC_ALL"
+        fi
+        export LANG=en_US.UTF-8
+    fi
 fi
 
 # common settings
@@ -157,7 +164,7 @@ if [ "$OSTYPE" == "cygwin" ]; then
         echo "SSH agent seems to be OK"
     else
         echo "Let me set up ssh agent for you sir"
-        ssh-agent > .ssh_agent
+        ssh-agent head -n 2 > .ssh_agent
         source .ssh_agent
         ssh-add
     fi
@@ -167,11 +174,24 @@ fi
 # make sure ssh-agent is running and is being used
 if ! pgrep ssh-agent > /dev/null 2>&1; then
     echo "$YELLOW WARN $DEFAULT ssh agent not running, let's start it up"
-    ssh-agent > .ssh_agent
+    ssh-agent | head -n 2 > .ssh_agent
 fi 
 
 if [ -e ~/.ssh_agent ]; then
     source ~/.ssh_agent
+fi
+
+# There should be only one ssh-agent running
+ssh_agent_count=$(pgrep -x ssh-agent | wc -l)
+if (( ssh_agent_count > 1)); then
+    echo "$YELLOW WARN $DEFAULT Too many ssh agents running!"
+fi
+
+# Let's check if the SSH_AGENT_PID actually refers to an existing process
+if ps -p $SSH_AGENT_PID > /dev/null; then
+    echo "$GREEN OK $DEFAULT SSH agent is alive"
+else
+    echo "$YELLOW WARN $DEFAULT SSH agent process $SSH_AGENT_PID is NOT running!"
 fi
 
 # Add ssh-key to ssh-agent if this is one of the workstations
@@ -192,7 +212,7 @@ if [ -e "$SSH_AUTH_SOCK" ]; then
     if [[ -e ~/.ssh/ssh_auth_sock ]]; then 
         echo "$GREEN OK $DEFAULT SSH_AUTH_SOCK is OK"
     else
-        echp "Setting up SSH_AUTH_SOCK"
+        echo "Setting up SSH_AUTH_SOCK"
         ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
     fi
 fi
