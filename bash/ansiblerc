@@ -1,18 +1,24 @@
 # shellcheck shell=bash
 # vim: filetype=sh
-if [ "$(uname)" == "Darwin" ]; then
-    echo "Setting up OSX ansible environment"
-    export ANSIBLE_PER_HOST_LOG_DIR="${HOME}/github/ansible/log"
-    alias ansible-playbook='ansible-playbook --extra-vars="log_dir=${HOME}/github/ansible/log"' 
+
+if [ -d ${GITHUB_DIRECTORY}/ansible ]; then
+    ANSIBLE_DIRECTORY=${GITHUB_DIRECTORY}/ansible
+    
+    export ANSIBLE_PER_HOST_LOG_DIR="${ANSIBLE_DIRECTORY}/log"
+    if [ ! -d $ANSIBLE_PER_HOST_LOG_DIR ]; then
+        mkdir -v $ANSIBLE_PER_HOST_LOG_DIR
+    fi
+    export ANSIBLE_HOST_KEY_CHECKING=False
+
+    alias ansible-playbook='ansible-playbook -i ${ANSIBLE_DIRECTORY}/hosts/all --extra-vars="log_dir=${ANSIBLE_DIRECTORY}/log"' 
+
+    if [ -d ${HOME}/opt/ansible ]; then
+        alias ansible-env-setup=". ${HOME}/opt/ansible/hacking/env-setup"
+    fi
+
+    alias ansible-show-puppet-changed='find log/ -name "puppetrun*changed.log" -mtime -1 -exec ls -lash {} \;|sort -k 10' 
+    alias ansible-git-update="git pull --rebase && git submodule update --init --recursive"
+    echo "$GREEN OK $DEFAULT Ansible directory found at: ${ANSIBLE_DIRECTORY}"
 else
-    export ANSIBLE_PER_HOST_LOG_DIR="${HOME}"/git/ansible-core/log
-    alias ansible-playbook="ansible-playbook --extra-vars='log_dir=${HOME}/git/ansible-core/log'"
+    echo "$YELLOW WARN $DEFAULT Ansible directory not found."
 fi
-
-export ANSIBLE_HOST_KEY_CHECKING=False
-
-alias ansible-env-setup=". ${HOME}/opt/ansible/hacking/env-setup"
-
-alias ansible-show-puppet-changed='find log/ -name "puppetrun*changed.log" -mtime -1 -exec ls -lash {} \;|sort -k 10' 
-alias ansible-git-update="git pull --rebase && git submodule update --init --recursive"
-

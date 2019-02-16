@@ -13,6 +13,18 @@ if [ -e "$HOME/.bash_aliases" ]; then
     source "$HOME/.bash_aliases"
 fi
 
+# before we go and set up other stuff, need to find the github directory first,
+# this depends on platform, but notmally I try to keep it in either ~/Documents/github or ~/github
+if [ -d ${HOME}/Documents/github ]; then
+    GITHUB_DIRECTORY=${HOME}/Documents/github
+    echo "$GREEN OK $DEFAULT GitHub directory found at: ${GITHUB_DIRECTORY}"
+elif [ -d ${HOME}/github ]; then
+     GITHUB_DIRECTORY=${HOME}/github
+     echo "$GREEN OK $DEFAULT GitHub directory found at: ${GITHUB_DIRECTORY}"
+else 
+    echo "$YELLOW WARN $DEFAULT Could not find your github directory. This is sub optimal."
+fi
+
 
 
 if [ -e "$HOME/.ansiblerc" ]; then
