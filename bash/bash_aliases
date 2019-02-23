@@ -1,5 +1,7 @@
 # shellcheck shell=bash
 # vim: filetype=sh
+
+print_load ".bash_aliases"
 alias iptls='sudo iptables -L -v -n --line-numbers'
 # dcfldd is waaaay cooler than dd
 if which dcfldd > /dev/null 2&>1; then

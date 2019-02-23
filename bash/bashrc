@@ -4,10 +4,16 @@
 # to avoid breaking SCP transfers only apply .bashrc to interactive sessions
 if tty -s; then
 
-
 if [ -e "$HOME/.colors" ]; then
     source "$HOME/.colors"
 fi
+
+if [ -e "$HOME/.functions" ]; then
+    source "$HOME/.functions"
+fi
+
+# need colors and functions loaded to print this
+print_load ".bashrc"
 
 if [ -e "$HOME/.bash_aliases" ]; then
     source "$HOME/.bash_aliases"
@@ -143,7 +149,7 @@ if [ "$OSTYPE" == "freebsd11.0" ] || [ "$OSTYPE" == "freebsd10.1" ]; then
     elif [ -x /usr/bin/less ]; then
         export PAGER=less
     else
-        echo "Please consider installing 'most' or 'less'"
+        print_warn "Please consider installing 'most' or 'less'"
     fi
 elif [ "$OSTYPE" == "linux-gnu" ]; then
     if [ -x /usr/bin/most ]; then
@@ -151,7 +157,7 @@ elif [ "$OSTYPE" == "linux-gnu" ]; then
     elif [ -x /usr/bin/less ]; then
         export PAGER=less
     else
-        echo "Please consider installing 'most' or 'less'"
+        print_warn "Please consider installing 'most' or 'less'"
     fi
 elif [ "$OSTYPE" == "darwin18" ]; then
     if [ -x /usr/local/bin/most ]; then
@@ -159,7 +165,7 @@ elif [ "$OSTYPE" == "darwin18" ]; then
     elif [ -x /usr/bin/less ]; then
         export PAGER=less
     else
-        echo "Please consider installing 'most' or 'less'"
+        print_warn "Please consider installing 'most' or 'less'"
     fi
 fi
 export HISTFILESIZE HISTSIZE HISTTIMEFORMAT PS1
@@ -304,5 +310,5 @@ fi
 
 if [ -e "$HOME/.bash_mac" ]; then
     source "$HOME/.bash_mac"
-    echo ".bash_mac loaded"
+    print_ok ".bash_mac loaded"
 fi

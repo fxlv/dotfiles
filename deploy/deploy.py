@@ -178,6 +178,8 @@ def main():
     bash_profile.deploy()
     colors = Dotfile("colors", "bash/colors", ".colors")
     colors.deploy()
+    functions = Dotfile("functions", "bash/functions", ".functions")
+    functions.deploy()
     bashrc = Dotfile("bashrc", "bash/bashrc", ".bashrc")
     bashrc.deploy()
     bash_aliases = Dotfile("bash_aliases", "bash/bash_aliases",

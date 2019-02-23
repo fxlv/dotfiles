@@ -1,15 +1,17 @@
-# shellcheck shell=bash
+ # shellcheck shell=bash
 # vim: filetype=sh
+
+print_load ".bash_mac"
 
 # http://postgresapp.com/documentation/cli-tools.html 
 if [ -d "/Applications/Postgres.app/Contents/Versions/latest/bin" ]; then
     export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
-    echo "Postgres.app added to PATH"
+    print_ok "Postgres.app added to PATH"
 fi
 
 if [ -f /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code ]; then
     alias code="/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code"
-    echo "VS Code alias added"
+    print_ok "VS Code alias added"
 fi
 
 if [ ! -e /usr/local/bin/gtimeout ]; then
@@ -20,6 +22,11 @@ if [ ! -e /usr/local/bin/fping ]; then
     echo "$YELLOW WARNING: $DEFAULT Please install 'fping' using HomeBrew"
 fi
 
+# let's enable some of the auto completions
+if [ -e /usr/local/etc/bash_completion.d/az ]; then
+    source /usr/local/etc/bash_completion.d/az
+    print_ok "Azure autocompletion enabled"
+fi
 #
 # Detect Docker environment
 #
@@ -30,12 +37,12 @@ export DOCKER_IP
 if fping -q -t 20 $DOCKER_IP; then
     if nc -z $DOCKER_IP 22 > /dev/null 2>&1; then
         if ssh $DOCKER_IP hostname | grep docker > /dev/null 2>&1; then
-            echo "$GREEN OK $DEFAULT Docker machine running on $DOCKER_IP"
+            print_ok "Docker machine running on $DOCKER_IP"
             alias docker="docker -H $DOCKER_IP:2376"
         fi
     else
         echo "$YELLOW WARN $DEFAULT Docker machine not responding to SSH"
     fi
 else
-    echo "$YELLOW WARN $DEFAULT Docker machine not running"
+    print_warn "Docker machine not running"
 fi

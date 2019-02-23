@@ -1,7 +1,8 @@
 # shellcheck shell=bash
 # vim: filetype=sh
-echo ".bash_profile loaded"
 source "$HOME/.bashrc"
+
+print_load ".bash_profile"
 
 if [ -e /etc/debian_version ]; then
     if [ -e /usr/games/fortune ]; then

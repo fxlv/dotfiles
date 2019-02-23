@@ -1,0 +1,16 @@
+# some functions to be used in the bashrc and other scripts
+
+print_load (){
+    echo "> Loading: $1"
+}
+print_ok (){
+    echo "$GREEN OK $DEFAULT ${1}"
+}
+
+print_warn (){
+    echo "$YELLOW WARN $DEFAULT ${1}"
+}
+
+print_crit (){
+    echo "$RED CRITICAL $DEFAULT ${1}"
+}
