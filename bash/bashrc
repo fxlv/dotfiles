@@ -21,10 +21,10 @@ fi
 
 # before we go and set up other stuff, need to find the github directory first,
 # this depends on platform, but notmally I try to keep it in either ~/Documents/github or ~/github
-if [ -d ${HOME}/Documents/github ]; then
+if [ -d "${HOME}/Documents/github" ]; then
     GITHUB_DIRECTORY=${HOME}/Documents/github
     echo "$GREEN OK $DEFAULT GitHub directory found at: ${GITHUB_DIRECTORY}"
-elif [ -d ${HOME}/github ]; then
+elif [ -d "${HOME}/github" ]; then
      GITHUB_DIRECTORY=${HOME}/github
      echo "$GREEN OK $DEFAULT GitHub directory found at: ${GITHUB_DIRECTORY}"
 else 
@@ -79,8 +79,10 @@ if (( boot2docker == 1 || moby == 1 || wsl == 1)); then
     fi
 else
     if [ "$OSTYPE" == "linux-gnu" ] || [ "$OSTYPE" == "linux-gnueabihf" ]; then
+        # shellcheck disable=SC2030
         locale_output=$(export LC_ALL=en_US.UTF-8 2>&1 | wc -l)
         if ((locale_output > 0)); then
+            # shellcheck disable=SC2031
             echo "$YELLOW WARN $DEFAULT Are you missing locales? Consider updating '/etc/locale.gen' by adding 'en_US.UTF-8 UTF-8' and then running 'sudo locale-gen $LC_ALL'"
         else
             echo "$GREEN OK $DEFAULT locale set to en_US.UTF-8"
@@ -206,7 +208,7 @@ if (( ssh_agent_count > 1)); then
 fi
 
 # Let's check if the SSH_AGENT_PID actually refers to an existing process
-if ps -p $SSH_AGENT_PID > /dev/null; then
+if ps -p "$SSH_AGENT_PID" > /dev/null; then
     echo "$GREEN OK $DEFAULT SSH agent is alive"
 else
     echo "$YELLOW WARN $DEFAULT SSH agent process $SSH_AGENT_PID is NOT running!"

@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 # some functions to be used in the bashrc and other scripts
 
 print_load (){

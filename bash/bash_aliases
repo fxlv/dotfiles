@@ -4,7 +4,8 @@
 print_load ".bash_aliases"
 alias iptls='sudo iptables -L -v -n --line-numbers'
 # dcfldd is waaaay cooler than dd
-if which dcfldd > /dev/null 2&>1; then
+# shellcheck disable=SC2210
+if command -v dcfldd > /dev/null 2&>1; then
     alias dd="dcfldd"
 fi
 alias ll='/bin/ls -lashG'
