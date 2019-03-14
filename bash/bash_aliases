@@ -8,6 +8,12 @@ alias iptls='sudo iptables -L -v -n --line-numbers'
 if command -v dcfldd > /dev/null 2&>1; then
     alias dd="dcfldd"
 fi
+
+# put macbook to sleep from CLI
+if [ -f /usr/bin/pmset ]; then
+    alias sleepnow='pmset sleepnow'
+fi
+
 alias ll='/bin/ls -lashG'
 
 _ssh_auth_save() {
