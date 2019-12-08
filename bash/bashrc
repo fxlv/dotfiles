@@ -293,9 +293,6 @@ if [ -e "$powerlinesh_linux" ]; then
     . $powerlinesh_linux
 fi
 
-# end of tty conditional
-fi
-
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 
@@ -314,3 +311,7 @@ if [ -e "$HOME/.bash_mac" ]; then
     source "$HOME/.bash_mac"
     print_ok ".bash_mac loaded"
 fi
+
+# end of tty conditional
+fi
+
