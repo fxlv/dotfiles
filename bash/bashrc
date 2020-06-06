@@ -48,6 +48,11 @@ if [ -e "$HOME/.azure.completion" ]; then
     source "$HOME/.azure.completion"
 fi
 
+# brew install bash-completion
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+
+[ -f /usr/local/bin/kubectl ] && source <(kubectl completion bash)
+
 # set up the environment in a docker container or WSL session
 boot2docker=$(uname -r |grep -c docker) # docker
 moby=$(uname -r |grep -c moby) # docker
