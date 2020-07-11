@@ -46,3 +46,21 @@ if fping -q -t 20 $DOCKER_IP; then
 else
     print_warn "Docker machine not running"
 fi
+
+
+
+# is there a Kubernetes machine running in Parralels?
+KUBERNETES_IP=10.211.55.8
+export KUBERNETES_IP
+if fping -q -t 20 $KUBERNETES_IP; then
+    if nc -z $KUBERNETES_IP 22 > /dev/null 2>&1; then
+        if ssh $KUBERNETES_IP hostname | grep docker > /dev/null 2>&1; then
+            print_ok "Kubernetes machine running on $KUBERNETES_IP"
+            alias docker="docker -H $KUBERNETES_IP:2376"
+        fi
+    else
+        echo "$YELLOW WARN $DEFAULT Kubernetes machine not responding to SSH"
+    fi
+else
+    print_warn "Kubernetes machine not running"
+fi
