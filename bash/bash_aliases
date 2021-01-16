@@ -3,6 +3,7 @@
 
 print_load ".bash_aliases"
 alias iptls='sudo iptables -L -v -n --line-numbers'
+alias gitstat='git log --pretty=format:"* %ai %h - %s" --stat --stat-graph-width=20 | head -n 30'
 # dcfldd is waaaay cooler than dd
 # shellcheck disable=SC2210
 if command -v dcfldd > /dev/null 2&>1; then
