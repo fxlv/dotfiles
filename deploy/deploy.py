@@ -198,6 +198,8 @@ def main():
     tmux.deploy()
     tmux = Dotfile("tmuxp", "tmuxp/dev.yaml", ".tmuxp/dev.yaml")
     tmux.deploy()
+    mc = Dotfile("mc", "mc/ini", ".config/mc/ini")
+    mc.deploy()
     # OSX will have some specifics
     if platform == "OSX":
         xmodmap = Dotfile("Xmodmap", "osx/Xmodmap", ".Xmodmap")
@@ -214,9 +216,6 @@ def main():
         if platform == "FreeBSD":
             xinitrc = Dotfile("xinitrc", "x/xinitrc", ".xinitrc")
             xinitrc.deploy()
-        # mc and tmux are only used on linux and freebsd
-        mc = Dotfile("mc", "mc/ini", ".config/mc/ini")
-        mc.deploy()
 
 
 if __name__ == "__main__":
