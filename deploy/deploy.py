@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 #
 import os
@@ -14,25 +14,25 @@ class Dotfile:
         script_dir = os.path.dirname(os.path.realpath(__file__))
         self.dotfiles_directory = os.path.dirname(script_dir)
         self.home = os.environ.get("HOME")
-        print "DEBUG: PRE self.src: {0}".format(self.src)
-        print "DEBUG: PRE self.dst: {0}".format(self.dst)
+        print("DEBUG: PRE self.src: {0}".format(self.src))
+        print("DEBUG: PRE self.dst: {0}".format(self.dst))
         # prepend 'dotfiles_directory' to the dotfile source
         self.src = "{0}/{1}".format(self.dotfiles_directory, self.src)
         # we can handle both relative and absolute path in home directory
         if self.home not in self.dst:
-            print "DEBUG: Appending {0} to {1}".format(self.home, self.dst)
+            print("DEBUG: Appending {0} to {1}".format(self.home, self.dst))
             self.dst = "{0}/{1}".format(self.home, self.dst)
         self.dst_parent_dir = os.path.dirname(self.dst)
         self.debug = True
         self.compile_dotfile_script = compile_dotfile_script
-        print "DEBUG: self.src: {0}".format(self.src)
-        print "DEBUG: self.dst: {0}".format(self.dst)
-        print "DEBUG: self.dst_parent_dir: {0}".format(self.dst_parent_dir)
+        print("DEBUG: self.src: {0}".format(self.src))
+        print("DEBUG: self.dst: {0}".format(self.dst))
+        print("DEBUG: self.dst_parent_dir: {0}".format(self.dst_parent_dir))
 
     def compile_dotfile(self):
         if self.debug:
             msg = "Compiling {0} dotfile by executing {1}"
-            print msg.format(self.name, self.compile_dotfile_script)
+            print(msg.format(self.name, self.compile_dotfile_script))
         dotfile_path = os.path.dirname(self.src)
         cur_dir = os.getcwd()
         os.chdir(dotfile_path)
@@ -40,9 +40,9 @@ class Dotfile:
             compile_script = "./{0}".format(self.compile_dotfile_script)
             os.system(compile_script)
         else:
-            print "Warning"
+            print("Warning")
             warn_msg = "Compile script {0} does not exist!"
-            print warn_msg.format(self.compile_dotfile_script)
+            print(warn_msg.format(self.compile_dotfile_script))
         # return to the original directory
         os.chdir(cur_dir)
 
@@ -66,7 +66,7 @@ class Dotfile:
     def exists(self):
         "Check if the destination file exists"
         if os.path.exists(self.dst):
-            print "{} exists".format(self.dst)
+            print("{} exists".format(self.dst))
             return True
         return False
 
@@ -75,15 +75,15 @@ class Dotfile:
         if os.path.exists(self.dst):
             if os.path.islink(self.dst):
                 if os.readlink(self.dst) == self.src:
-                    print "Valid link: {0} -> {1}".format(self.src, self.dst)
+                    print("Valid link: {0} -> {1}".format(self.src, self.dst))
                     return True
                 else:
-                    print "Invalid link for {0}".format(self.dst)
+                    print("Invalid link for {0}".format(self.dst))
                     return False
 
             else:
                 msg = "The file {0} exists but it is not a symlink"
-                print msg.format(self.dst)
+                print(msg.format(self.dst))
                 return False
         else:
             return False
@@ -93,14 +93,14 @@ class Dotfile:
         backup_dst = "{0}.backup".format(self.dst)
         if os.path.exists(backup_dst):
             msg = "{0} already exists, cannot create a backup."
-            print msg.format(backup_dst)
+            print(msg.format(backup_dst))
             return False
         if not os.path.isfile(self.dst):
             msg = "{0} is not a file, cannot create a backup"
-            print msg.format(backup_dst)
+            print(msg.format(backup_dst))
             return False
         # proceed with backin up the file
-        print "Backing up {0} -> {1}".format(self.dst, backup_dst)
+        print("Backing up {0} -> {1}".format(self.dst, backup_dst))
         os.rename(self.dst, backup_dst)
         self.backup_dst = backup_dst
         return True
@@ -111,7 +111,7 @@ class Dotfile:
         return False
 
     def create_parent_dir(self):
-        print "DEBUG: creating parent dir {0}".format(self.dst_parent_dir)
+        print("DEBUG: creating parent dir {0}".format(self.dst_parent_dir))
         parent_of_parent = os.path.dirname(self.dst_parent_dir)
         if not os.path.exists(parent_of_parent):
             os.mkdir(parent_of_parent)
@@ -124,28 +124,28 @@ class Dotfile:
             self.compile_dotfile()
         # check if the dotfile is already deployed
         if self.is_deployed():
-            print "Dotfile {0} is already deployed.".format(self.name)
+            print("Dotfile {0} is already deployed.".format(self.name))
             return
         # if the destination file already exists but it is not
         # our symlink then print out a warning to the user and skip it
         if self.exists():
             if self.backup():
-                print "Backup file {0} created".format(self.backup_dst)
+                print("Backup file {0} created".format(self.backup_dst))
             else:
                 msg = "File {0} already exists "\
                       "but it is not the correct dotfile"
-                print msg.format(self.dst)
-                print "Backing up also failed."
-                print "Please remove it and re-run this script."
-                print "Skipping {0}".format(self.name)
+                print(msg.format(self.dst))
+                print("Backing up also failed.")
+                print("Please remove it and re-run this script.")
+                print("Skipping {0}".format(self.name))
                 return
 
         else:
             if self.is_broken_link():
-                print "Broken symlink found for {}".format(self.dst)
+                print("Broken symlink found for {}".format(self.dst))
                 os.unlink(self.dst)
         # finally symlink the dotfile
-        print "Symlinking {0} -> {1}".format(self.src, self.dst)
+        print("Symlinking {0} -> {1}".format(self.src, self.dst))
         os.symlink(self.src, self.dst)
 
 
@@ -160,9 +160,9 @@ def main():
     elif uname_string == "CYGWIN_NT-10.0-WOW":
         platform = "Cygwin"
     else:
-        print "Unsupported platform"
+        print("Unsupported platform")
         sys.exit(1)
-    print "Platform:", platform
+    print("Platform:", platform)
     curlrc = Dotfile("curlrc", "curl/curlrc", ".curlrc")
     curlrc.deploy()
     mostrc = Dotfile("mostrc", "most/mostrc", ".mostrc")
