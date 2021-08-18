@@ -20,11 +20,14 @@ if [ -e "$HOME/.bash_aliases" ]; then
 fi
 
 # before we go and set up other stuff, need to find the github directory first,
-# this depends on platform, but notmally I try to keep it in either ~/Documents/github or ~/github
+# this depends on platform, but normally I try to keep it in either ~/Documents/github or ~/github
 if [ -d "${HOME}/Documents/github" ]; then
     GITHUB_DIRECTORY=${HOME}/Documents/github
     echo "$GREEN OK $DEFAULT GitHub directory found at: ${GITHUB_DIRECTORY}"
 elif [ -d "${HOME}/github" ]; then
+     GITHUB_DIRECTORY=${HOME}/github
+     echo "$GREEN OK $DEFAULT GitHub directory found at: ${GITHUB_DIRECTORY}"
+elif [ -d "${HOME}/git/github" ]; then
      GITHUB_DIRECTORY=${HOME}/github
      echo "$GREEN OK $DEFAULT GitHub directory found at: ${GITHUB_DIRECTORY}"
 else 
