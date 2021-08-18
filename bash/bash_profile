@@ -12,3 +12,5 @@ if [ -e /etc/debian_version ]; then
 fi
 echo
 uptime
+
+source /home/fx/.config/broot/launcher/bash/br

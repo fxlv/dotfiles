@@ -122,6 +122,10 @@ if [ -d "${HOME}/opt/bin" ]; then
     PATH=${HOME}/opt/bin:$PATH
 fi
 
+if [ -d "${HOME}/.cargo/bin" ]; then
+    PATH=${HOME}/.cargo/bin:$PATH
+fi
+
 if [ -d "/opt/bin" ]; then
     PATH=/opt/bin:$PATH
 fi
@@ -287,8 +291,11 @@ if type go > /dev/null 2> /dev/null; then
 fi
 
 # install powerline:  pip install --user git+git://github.com/powerline/powerline
+# follow the powerline docs, to also intall the fonts
+# https://powerline.readthedocs.io/en/latest/installation/linux.html
+
 powerlinesh="/Users/fx/Library/Python/2.7/lib/python/site-packages/powerline/bindings/bash/powerline.sh"
-powerlinesh_linux="./.local/lib/python2.7/site-packages/powerline/bindings/bash/powerline.sh"
+powerlinesh_linux="./.local/lib/python3.9/site-packages/powerline/bindings/bash/powerline.sh"
 
 if [ -e "$powerlinesh" ]; then
 . /Users/fx/Library/Python/2.7/lib/python/site-packages/powerline/bindings/bash/powerline.sh
@@ -320,3 +327,6 @@ fi
 # end of tty conditional
 fi
 
+
+# install broot from https://github.com/Canop/broot
+source /home/fx/.config/broot/launcher/bash/br
