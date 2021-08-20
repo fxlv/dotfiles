@@ -64,3 +64,7 @@ if fping -q -t 20 $KUBERNETES_IP; then
 else
     print_warn "Kubernetes machine not running"
 fi
+
+
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
