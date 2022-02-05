@@ -1,8 +1,17 @@
-"
+" for Regular VIM
+" --------------------------------------
 "  mkdir -p ~/.vim/autoload
 "  curl -fLo ~/.vim/autoload/plug.vim \
-"https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+"   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 "
+"
+" or for NeoVIM
+" --------------------------------------
+"
+" sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+"       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+"
+
 au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml foldmethod=manual
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
@@ -56,18 +65,25 @@ Plug 'bling/vim-airline'
 Plug 'altercation/vim-colors-solarized'
 Plug 'nightsense/stellarized'
 Plug 'dracula/vim'
-" YCM needs it's installer to be called as well
-Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
-" on FreeBSD, make sure you have clang36 (or clang36) and cmake installed
-" in order to build YCM libraries
-" check the YCM Readme for details, but essentially:
-" pkg install llvm35 boost-all boost-python-libs clang35
-" export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/llvm35/lib/
-" ./install.sh --clang-completer --system-libclang --system-boost
-"
-" If you are getting some python exceptions, check if python supports SSL
-" I have seen errors when python is built with LibreSSL
+" Readme for CoC: https://github.com/neoclide/coc.nvim
+" Install at least some of the language servers
+" :CocInstall coc-pyright coc-sh coc-rust-analyzer 
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
+
+
+if (empty($TMUX))
+  if (has("nvim"))
+    "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+  endif
+  "For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
+  "Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
+  " < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
+  if (has("termguicolors"))
+    set termguicolors
+  endif
+endif
 
 "
 " additionally for syntax checking/linting install:
@@ -94,7 +110,6 @@ autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 
-let g:ycm_autoclose_preview_window_after_completion = 1
 
 set nocompatible 
 syntax enable
@@ -104,16 +119,36 @@ set hlsearch
 " for colors, see this awesome color table
 " https://github.com/guns/xterm-color-table.vim
 
-" use solarized colorscheme on my mac
-" use dracula everywhere else
-" another option I really like is stellarized light version
+
+" Primitive way of detecting WSL2 based on Kernel version string
+let wsl = 0
+let uname = split(trim(system('uname -r')),'-')
+if len(uname) == 4
+    if uname[3] == "WSL2"
+        let wsl = 1
+    endif
+endif
+
+
+" Configuring some of the settings based on environment
 if has('mac')
-set background=dark
-let g:solarized_termcolors=256
-colorscheme solarized
-else
-set termguicolors
-colorscheme dracula
+    echo "Running on a Mac"
+    set background=dark
+    let g:solarized_termcolors=256
+    colorscheme solarized
+elseif has('linux')
+    if wsl == 1
+        echo "Running on WSL2"
+        set background=dark
+        let g:solarized_termcolors=256
+        colorscheme solarized
+    else
+        echo "Running on generic Linux"
+        set background=dark
+        let g:solarized_termcolors=256
+        set term=xterm-256color
+        colorscheme solarized
+    endif
 endif
 
 hi Search ctermfg=31 ctermbg=157
@@ -182,6 +217,3 @@ filetype plugin indent on
 autocmd FileType yaml setl indentkeys-=<:>
 autocmd FileType yaml setl shiftwidth=2
 autocmd FileType yaml setl tabstop=2
-set background=dark
-set term=xterm-256color
-colo solarized

@@ -169,6 +169,8 @@ def main():
     mostrc.deploy()
     vimrc = Dotfile("vimrc", "vim/vimrc", ".vimrc")
     vimrc.deploy()
+    nvimrc = Dotfile("nvimrc", "vim/vimrc", ".config/nvim/init.vim")
+    nvimrc.deploy()
     screen = Dotfile("screen", "screen/screenrc", ".screenrc")
     screen.deploy()
     git = Dotfile("gitconfig", "git/gitconfig", ".gitconfig")
