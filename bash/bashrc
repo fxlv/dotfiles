@@ -303,17 +303,24 @@ fi
 # follow the powerline docs, to also intall the fonts
 # https://powerline.readthedocs.io/en/latest/installation/linux.html
 
-powerlinesh="$HOME/Library/Python/3.8/lib/python/site-packages/powerline/bindings/bash/powerline.sh"
-powerlinesh_linux="./.local/lib/python3.9/site-packages/powerline/bindings/bash/powerline.sh"
+#powerlinesh="$HOME/Library/Python/3.8/lib/python/site-packages/powerline/bindings/bash/powerline.sh"
+#powerlinesh_linux="./.local/lib/python3.9/site-packages/powerline/bindings/bash/powerline.sh"
+#powerline_u18="/usr/share/powerline/bindings/bash/powerline.sh"
 
-if [ -e "$powerlinesh" ]; then
-    echo "Setting up powerline for macOS"
-    . $powerlinesh
-fi
+#if [ -e "$powerlinesh" ]; then
+#    echo "Setting up powerline for macOS"
+#    . $powerlinesh
+#fi
 
-if [ -e "$powerlinesh_linux" ]; then
-    . $powerlinesh_linux
-fi
+#if [ -e "$powerlinesh_linux" ]; then
+#    . $powerlinesh_linux
+#fi
+
+#if [ -e "$powerline_u18" ]; then
+#    . $powerline_u18
+#fi
+#
+
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
@@ -343,3 +350,7 @@ fi
 if [ -e $HOME/.cargo/env ]; then 
     . "$HOME/.cargo/env"
 fi
+
+
+
+eval "$(oh-my-posh --init --shell bash --config ~/.fxposh.json)"
