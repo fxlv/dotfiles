@@ -59,7 +59,7 @@ fi
 # set up the environment in a docker container or WSL session
 boot2docker=$(uname -r |grep -c docker) # docker
 moby=$(uname -r |grep -c moby) # docker
-wsl=$(uname -r | grep -c Microsoft ) # Windows Subsystem for Linux
+wsl=$(uname -r | grep -c WSL) # Windows Subsystem for Linux
 if (( boot2docker == 1 || moby == 1 || wsl == 1)); then
     echo "Environment recognized, great stuff."
     echo "Setting locale: LC_ALL=C"
@@ -196,7 +196,7 @@ if [ "$OSTYPE" == "cygwin" ]; then
         echo "SSH agent seems to be OK"
     else
         echo "Let me set up ssh agent for you sir"
-        ssh-agent head -n 2 > .ssh_agent
+        ssh-agent | head -n 2 > .ssh_agent
         source .ssh_agent
         ssh-add
     fi
@@ -333,6 +333,13 @@ fi
 # end of tty conditional
 fi
 
+if [ -e /home/fx/.config/broot ]; then
+    source /home/fx/.config/broot/launcher/bash/br
+else
+    echo "$YELLOW WARN $DEFAULT >>> Install broot from https://github.com/Canop/broot"
+fi
 
-# install broot from https://github.com/Canop/broot
-source /home/fx/.config/broot/launcher/bash/br
+
+if [ -e $HOME/.cargo/env ]; then 
+    . "$HOME/.cargo/env"
+fi
