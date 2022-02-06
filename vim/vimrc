@@ -21,8 +21,8 @@ set encoding=utf-8
 
 
 call plug#begin()
-Plug 'scrooloose/syntastic'
-let g:syntastic_yaml_checkers = ['yamllint']
+" nvim: Plug 'scrooloose/syntastic'
+" let g:syntastic_yaml_checkers = ['yamllint']
 "node.js and javascript
 " make sure you have jshint installed: npm install -g jshint
 Plug 'moll/vim-node'
@@ -52,14 +52,14 @@ Plug 'jplaut/vim-arduino-ino'
 Plug 'tpope/vim-surround'
 Plug 'lokaltog/vim-easymotion'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-sensible'
+" problems with nvim : Plug 'tpope/vim-sensible'
 Plug 'ervandew/supertab'
 " For easy Hex editing
 Plug 'fidian/hexmode'
 Plug 'scrooloose/nerdtree'
 Plug 'elzr/vim-json'
-Plug 'keith/tmux.vim' 
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+"Plug 'keith/tmux.vim' 
+"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'bling/vim-airline' 
 Plug 'altercation/vim-colors-solarized'
 Plug 'nightsense/stellarized'
@@ -67,7 +67,11 @@ Plug 'dracula/vim'
 " Readme for CoC: https://github.com/neoclide/coc.nvim
 " Install at least some of the language servers
 " :CocInstall coc-pyright coc-sh coc-rust-analyzer 
+" also make sure Python3 provider works by running :checkhealth command
+"
+" Install python provider with 'python3 -m pip install --user --upgrade pynvim`
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 call plug#end()
 
 
@@ -219,3 +223,7 @@ filetype plugin indent on
 autocmd FileType yaml setl indentkeys-=<:>
 autocmd FileType yaml setl shiftwidth=2
 autocmd FileType yaml setl tabstop=2
+
+
+noremap gh :call CocActionAsync('doHover')<CR>
+nnoremap gd :call CocActionAsync('jumpDefinition')<CR>
