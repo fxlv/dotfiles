@@ -33,8 +33,7 @@ Plug 'wookiehangover/jshint.vim'
 Plug 'marijnh/tern_for_vim'
 " Python
 Plug 'nvie/vim-flake8'
-" Puppet
-Plug 'rodjek/vim-puppet'
+Plug 'morhetz/gruvbox' 
 " arduino syntax
 Plug '4Evergreen4/vim-hardy'
 " vim-go plugin for golang
@@ -136,12 +135,15 @@ if has('mac')
     set background=dark
     let g:solarized_termcolors=256
     colorscheme solarized
+elseif has('nvim')
+    echo "Running NVim"
+    set background=dark
+    colorscheme gruvbox
 elseif has('linux')
     if wsl == 1
         echo "Running on WSL2"
         set background=dark
-        let g:solarized_termcolors=256
-        colorscheme solarized
+        colorscheme gruvbox
     else
         echo "Running on generic Linux"
         set background=dark
