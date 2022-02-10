@@ -351,6 +351,10 @@ if [ -e $HOME/.cargo/env ]; then
     . "$HOME/.cargo/env"
 fi
 
+if [ -e $HOME/.extrarc ]; then 
+    . "$HOME/.extrarc"
+fi
+
 
 
 eval "$(oh-my-posh --init --shell bash --config ~/.fxposh.json)"
