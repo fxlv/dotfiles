@@ -199,6 +199,10 @@ nmap <C-V> "+gP
 imap <C-V> <ESC><C-V>i
 vmap <C-C> "+y 
 
+" some shortcuts for managing todo lists
+imap <C-t> [ ] 
+nmap <C-t> :s/\[\s\]/\[x\]/
+
 map <C-n> :NERDTreeToggle<CR>
 map <C-f> :NERDTreeFind<CR>
 
