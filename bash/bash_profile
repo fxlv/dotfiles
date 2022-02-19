@@ -11,3 +11,5 @@ if [ -e /etc/debian_version ]; then
     fi
 fi
 echo
+uptime
+
