@@ -136,6 +136,9 @@ set hlsearch
 set ttyfast
 set mouse=a
 
+" install win32yank and use :checkhealth to make sure clipboard works
+set clipboard+=unnamedplus
+
 " for colors, see this awesome color table
 " https://github.com/guns/xterm-color-table.vim
 
