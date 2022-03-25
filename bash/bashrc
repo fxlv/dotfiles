@@ -153,12 +153,6 @@ if [ -d "${HOME}/opt/bin" ]; then
 fi
 
 
-# add local python bin dir to path on OSX if it exists
-if [ -d "${HOME}/Library/Python/2.7/bin" ]; then
-    PATH=${HOME}/Library/Python/2.7/bin:$PATH 
-    echo "${HOME}/Library/Python/2.7/bin added"
-fi
-
 export PATH
 
 if [ "$OSTYPE" == "freebsd11.0" ] || [ "$OSTYPE" == "freebsd10.1" ]; then
@@ -194,54 +188,53 @@ export EDITOR="vim"
 
 
 
-if [ "$OSTYPE" == "cygwin" ]; then
-    echo "Running in cygwin, brawe man."
-    if ssh-add -L > /dev/null; then
-        echo "SSH agent seems to be OK"
-    else
-        echo "Let me set up ssh agent for you sir"
+
+
+ssh-add -l
+if [ "$?" == 2 ]; then
+    echo "$YELLOW WARN $DEFAULT SSH agent has no keys loaded."
+
+    # make sure ssh-agent is running and is being used
+    if ! pgrep ssh-agent > /dev/null 2>&1; then
+        echo "$YELLOW WARN $DEFAULT ssh agent not running, let's start it up"
         ssh-agent | head -n 2 > .ssh_agent
-        source .ssh_agent
-        ssh-add
+    fi 
+
+    if [ -e ~/.ssh_agent ]; then
+        source ~/.ssh_agent
     fi
-    
-fi
+    # There should be only one ssh-agent running
+    ssh_agent_count=$(pgrep -x ssh-agent | wc -l)
+    if (( ssh_agent_count > 1)); then
+        echo "$YELLOW WARN $DEFAULT Too many ssh agents running!"
+    fi
 
-# make sure ssh-agent is running and is being used
-if ! pgrep ssh-agent > /dev/null 2>&1; then
-    echo "$YELLOW WARN $DEFAULT ssh agent not running, let's start it up"
-    ssh-agent | head -n 2 > .ssh_agent
-fi 
-
-if [ -e ~/.ssh_agent ]; then
-    source ~/.ssh_agent
-fi
-
-# There should be only one ssh-agent running
-ssh_agent_count=$(pgrep -x ssh-agent | wc -l)
-if (( ssh_agent_count > 1)); then
-    echo "$YELLOW WARN $DEFAULT Too many ssh agents running!"
-fi
-
-# Let's check if the SSH_AGENT_PID actually refers to an existing process
-if ps -p "$SSH_AGENT_PID" > /dev/null; then
-    echo "$GREEN OK $DEFAULT SSH agent is alive"
-else
-    echo "$YELLOW WARN $DEFAULT SSH agent process $SSH_AGENT_PID is NOT running!"
-fi
-
-# Add ssh-key to ssh-agent if this is one of the workstations
-# I assume that ssh-agent is started by something else (like .xinitrc).
-if [ -n "$SSH_AGENT_PID" ]; then
-    if ssh-add -L > /dev/null; then
-        echo "$GREEN OK $DEFAULT SSH key already loaded"
+    # Let's check if the SSH_AGENT_PID actually refers to an existing process
+    if ps -p "$SSH_AGENT_PID" > /dev/null; then
+        echo "$GREEN OK $DEFAULT SSH agent is alive"
     else
-      echo "Adding ssh key to ssh-agent"
-        ssh-add
+        echo "$YELLOW WARN $DEFAULT SSH agent process $SSH_AGENT_PID is NOT running!"
+    fi
+
+    # Add ssh-key to ssh-agent if this is one of the workstations
+    # I assume that ssh-agent is started by something else (like .xinitrc).
+    if [ -n "$SSH_AGENT_PID" ]; then
+        if ssh-add -L > /dev/null; then
+            echo "$GREEN OK $DEFAULT SSH key already loaded"
+        else
+        echo "Adding ssh key to ssh-agent"
+            ssh-add
+        fi
+    else
+        echo "$YELLOW WARN $DEFAULT SSH_AGENT_PID variable does not exist"
     fi
 else
-    echo "$YELLOW WARN $DEFAULT SSH_AGENT_PID variable does not exist"
+    echo "$GREEN OK $DEFAULT SSH agent has keys loaded"
 fi
+
+
+
+
 
 
 if [ -e "$SSH_AUTH_SOCK" ]; then
@@ -270,22 +263,6 @@ if [ -e /usr/local/bin/docker-machine ]; then
     fi
 fi
 
-# if there's ssh-when-up.py present, use that for SSHing
-# however sometimes pure ssh is needed and for theses cases
-# create an alias 'ssh_original' 
-if type ssh-when-up.py > /dev/null 2> /dev/null; then
-    if [ -e /bin/ssh ]; then
-        full_ssh_path=/bin/ssh
-    fi
-
-    if [ -e /usr/bin/ssh ]; then 
-        full_ssh_path=/usr/bin/ssh
-    fi
-    alias ssh_original="$full_ssh_path"
-    echo "Using ssh-when-up.py script instead of ssh"
-    alias ssh="ssh-when-up.py"
-
-fi
 
 # setup golang environment
 if type go > /dev/null 2> /dev/null; then
