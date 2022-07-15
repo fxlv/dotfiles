@@ -270,8 +270,8 @@ fi
 eval "$(oh-my-posh --init --shell bash --config ~/.fxposh.json)"
 . "$HOME/.cargo/env"
 
-if [ -e $HOME/opt/bin/direnv ]; then
+if [ -e $HOME/opt/bin/direnv ] || [ -e /usr/bin/direnv ]; then
     echo "Direnv is present"
-eval "$(direnv hook bash)"
+    eval "$(direnv hook bash)"
 fi
 
