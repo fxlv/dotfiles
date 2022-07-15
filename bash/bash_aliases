@@ -4,6 +4,7 @@
 print_load ".bash_aliases"
 alias iptls='sudo iptables -L -v -n --line-numbers'
 alias gitstat='git log --pretty=format:"* %ai %h - %s" --stat --stat-graph-width=20 | head -n 30'
+alias activatevenv="source venv/bin/activate"
 # dcfldd is waaaay cooler than dd
 # shellcheck disable=SC2210
 if command -v dcfldd > /dev/null 2&>1; then
@@ -16,18 +17,4 @@ if [ -f /usr/bin/pmset ]; then
 fi
 
 alias ll='/bin/ls -lashG'
-
-_ssh_auth_save() {
-        screen_dir="$HOME/.screen"
-        if [ ! -d "$screen_dir" ]; then
-            echo "Creating $screen_dir directory"
-            mkdir "$screen_dir"
-        fi
-        ln -sf "$SSH_AUTH_SOCK" "${screen_dir}/ssh-auth-sock.$HOSTNAME"
-}
-
-alias screen='_ssh_auth_save ; export HOSTNAME=$(hostname) ; screen'
-
 alias ds='dstat -lcidmnpryt'
-
-alias puppet-validate='puppet parser validate'

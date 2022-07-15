@@ -3,11 +3,6 @@
 
 print_load ".bash_mac"
 
-# http://postgresapp.com/documentation/cli-tools.html 
-if [ -d "/Applications/Postgres.app/Contents/Versions/latest/bin" ]; then
-    export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
-    print_ok "Postgres.app added to PATH"
-fi
 
 if [ -f /Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code ]; then
     alias code="/Applications/Visual\ Studio\ Code.app/Contents/Resources/app/bin/code"

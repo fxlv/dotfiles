@@ -34,8 +34,6 @@ else
     echo "$YELLOW WARN $DEFAULT Could not find your github directory. This is sub optimal."
 fi
 
-
-
 if [ -e "$HOME/.ansiblerc" ]; then
     source "$HOME/.ansiblerc"
 fi
@@ -44,9 +42,6 @@ if [ -e "$HOME/.fzf.bash" ]; then
     source "$HOME/.fzf.bash"
 fi
 
-# 
-# azure --completion >> ~/.azure.completion
-#
 if [ -e "$HOME/.azure.completion" ]; then
     source "$HOME/.azure.completion"
 fi
@@ -133,20 +128,6 @@ if [ -d "/opt/bin" ]; then
     PATH=/opt/bin:$PATH
 fi
 
-if [ -d "${HOME}/Library/Python/3.9/bin" ]; then
-    PATH="${HOME}/Library/Python/3.9/bin:$PATH"
-fi
-
-# bin-scripts should be in either ~/opt or ~/github
-if [ -d "${HOME}/opt/bin-scripts" ]; then
-    PATH=${HOME}/opt/bin-scripts/laptop:$PATH
-    PATH=${HOME}/opt/bin-scripts:$PATH
-fi
-if [ -d "${HOME}/github/bin-scripts" ]; then
-    PATH=${HOME}/github/bin-scripts/laptop:$PATH
-    PATH=${HOME}/github/bin-scripts:$PATH
-fi
-
 # if it exists, add ${HOME}/opt/bin to path 
 if [ -d "${HOME}/opt/bin" ]; then
     PATH=${HOME}/opt/bin:$PATH
@@ -191,33 +172,35 @@ export EDITOR="vim"
 
 
 ssh-add -l
-if [ "$?" == 2 ]; then
+if [ "$?" != 0 ]; then
     echo "$YELLOW WARN $DEFAULT SSH agent has no keys loaded."
+    
 
     # make sure ssh-agent is running and is being used
     if ! pgrep ssh-agent > /dev/null 2>&1; then
         echo "$YELLOW WARN $DEFAULT ssh agent not running, let's start it up"
-        ssh-agent | head -n 2 > .ssh_agent
+        eval $(ssh-agent -s)
+    else
+        # There should be only one ssh-agent running
+        ssh_agent_count=$(pgrep -x ssh-agent | wc -l)
+        if (( ssh_agent_count > 1)); then
+            echo "$YELLOW WARN $DEFAULT Too many ssh agents running!"
+        else
+            export SSH_AGENT_PID=$(pgrep ssh-agent)
+        fi
     fi 
 
-    if [ -e ~/.ssh_agent ]; then
-        source ~/.ssh_agent
-    fi
-    # There should be only one ssh-agent running
-    ssh_agent_count=$(pgrep -x ssh-agent | wc -l)
-    if (( ssh_agent_count > 1)); then
-        echo "$YELLOW WARN $DEFAULT Too many ssh agents running!"
-    fi
-
-    # Let's check if the SSH_AGENT_PID actually refers to an existing process
-    if ps -p "$SSH_AGENT_PID" > /dev/null; then
-        echo "$GREEN OK $DEFAULT SSH agent is alive"
-    else
-        echo "$YELLOW WARN $DEFAULT SSH agent process $SSH_AGENT_PID is NOT running!"
+    if [ -e "$SSH_AUTH_SOCK" ]; then
+        if [[ -e ~/.ssh/ssh_auth_sock ]]; then 
+            echo "$GREEN OK $DEFAULT SSH_AUTH_SOCK is OK"
+        else
+            echo "Setting up SSH_AUTH_SOCK"
+            ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
+        fi
     fi
 
-    # Add ssh-key to ssh-agent if this is one of the workstations
-    # I assume that ssh-agent is started by something else (like .xinitrc).
+
+
     if [ -n "$SSH_AGENT_PID" ]; then
         if ssh-add -L > /dev/null; then
             echo "$GREEN OK $DEFAULT SSH key already loaded"
@@ -232,36 +215,6 @@ else
     echo "$GREEN OK $DEFAULT SSH agent has keys loaded"
 fi
 
-
-
-
-
-
-if [ -e "$SSH_AUTH_SOCK" ]; then
-    if [[ -e ~/.ssh/ssh_auth_sock ]]; then 
-        echo "$GREEN OK $DEFAULT SSH_AUTH_SOCK is OK"
-    else
-        echo "Setting up SSH_AUTH_SOCK"
-        ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
-    fi
-fi
-
-
-
-
-alias activatevenv="source venv/bin/activate"
-if [ -e /usr/local/bin/docker-machine ]; then
-    if docker-machine status default| grep Running > /dev/null; then
-        echo "Docker machine $GREEN OK $DEFAULT"
-        echo "Run 'denv' to activate Docker environment"
-        echo "Docker aliases:"
-        echo -e "\tdshell\t- shellbox"
-        alias denv="eval \"$(docker-machine env default)\""
-        alias dshell="docker run -ti fxlv/debian_wheezy:shellbox bash"
-    else
-        echo "Docker machine $RED not available $DEFAULT"
-    fi
-fi
 
 
 # setup golang environment
@@ -280,30 +233,6 @@ if [ -e "$HOME/.bash_mac" ]; then
     print_ok ".bash_mac loaded"
 fi
 
-# install powerline:  pip install --user git+git://github.com/powerline/powerline
-# follow the powerline docs, to also intall the fonts
-# https://powerline.readthedocs.io/en/latest/installation/linux.html
-
-#powerlinesh="$HOME/Library/Python/3.8/lib/python/site-packages/powerline/bindings/bash/powerline.sh"
-#powerlinesh_linux="./.local/lib/python3.9/site-packages/powerline/bindings/bash/powerline.sh"
-#powerline_u18="/usr/share/powerline/bindings/bash/powerline.sh"
-
-#if [ -e "$powerlinesh" ]; then
-#    echo "Setting up powerline for macOS"
-#    . $powerlinesh
-#fi
-
-#if [ -e "$powerlinesh_linux" ]; then
-#    . $powerlinesh_linux
-#fi
-
-#if [ -e "$powerline_u18" ]; then
-#    . $powerline_u18
-#fi
-#
-
-
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 
 chmod -v 0640 ~/.ssh/config
@@ -339,7 +268,10 @@ fi
 
 
 eval "$(oh-my-posh --init --shell bash --config ~/.fxposh.json)"
-# install broot from https://github.com/Canop/broot
-source /home/fx/.config/broot/launcher/bash/br
 . "$HOME/.cargo/env"
+
+if [ -e $HOME/opt/bin/direnv ]; then
+    echo "Direnv is present"
+eval "$(direnv hook bash)"
+fi
 
