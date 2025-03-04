@@ -265,13 +265,13 @@ if [ -e $HOME/.extrarc ]; then
     . "$HOME/.extrarc"
 fi
 
-
-
-eval "$(oh-my-posh --init --shell bash --config ~/.fxposh.json)"
-. "$HOME/.cargo/env"
-
 if [ -e $HOME/opt/bin/direnv ] || [ -e /usr/bin/direnv ]; then
     echo "Direnv is present"
     eval "$(direnv hook bash)"
 fi
 
+if [ -e /etc/bash_completion.d/azure-cli ]; then
+    source /etc/bash_completion.d/azure-cli
+else
+    echo "$YELLOW WARN $DEFAULT >>> Azure CLI bash completion not found"
+fi
