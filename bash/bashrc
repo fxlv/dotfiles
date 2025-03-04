@@ -160,51 +160,34 @@ export EDITOR="vim"
 
 
 
+SSH_ENV="$HOME/.ssh/environment"
 
-ssh-add -l
-if [ "$?" != 0 ]; then
-    echo "$YELLOW WARN $DEFAULT SSH agent has no keys loaded."
-    
+function start_agent {
+    echo -e "${YELLOW}Starting new ssh-agent${DEFAULT}"
+    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    chmod 600 "${SSH_ENV}"
+    . "${SSH_ENV}" > /dev/null
+    /usr/bin/ssh-add
+}
 
-    # make sure ssh-agent is running and is being used
-    if ! pgrep ssh-agent > /dev/null 2>&1; then
-        echo "$YELLOW WARN $DEFAULT ssh agent not running, let's start it up"
-        eval $(ssh-agent -s)
+# Source SSH settings if they exist
+if [ -f "${SSH_ENV}" ]; then
+    . "${SSH_ENV}" > /dev/null
+    # Check if agent is running
+    if ! kill -0 "$SSH_AGENT_PID" 2>/dev/null; then
+        echo -e "${YELLOW}Stale ssh-agent found. Restarting...${DEFAULT}"
+        start_agent
     else
-        # There should be only one ssh-agent running
-        ssh_agent_count=$(pgrep -x ssh-agent | wc -l)
-        if (( ssh_agent_count > 1)); then
-            echo "$YELLOW WARN $DEFAULT Too many ssh agents running!"
+        # Agent is running, check if keys are loaded
+        if ssh-add -l > /dev/null 2>&1; then
+            echo -e "${GREEN}OK${DEFAULT} SSH agent running and keys loaded."
         else
-            export SSH_AGENT_PID=$(pgrep ssh-agent)
+            echo -e "${YELLOW}WARN${DEFAULT} No SSH keys loaded. Loading now."
+            ssh-add
         fi
-    fi 
-
-    if [ -e "$SSH_AUTH_SOCK" ]; then
-        if [[ -e ~/.ssh/ssh_auth_sock ]]; then 
-            echo "$GREEN OK $DEFAULT SSH_AUTH_SOCK is OK"
-        else
-            echo "Setting up SSH_AUTH_SOCK"
-            ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
-        fi
-    fi
-
-
-
-    if [ -n "$SSH_AGENT_PID" ]; then
-        if ssh-add -L > /dev/null; then
-            echo "$GREEN OK $DEFAULT SSH key already loaded"
-        else
-            echo "Adding ssh key to ssh-agent"
-            if ! ssh-add; then
-                echo "$RED ERROR $DEFAULT Failed to add SSH key to ssh-agent. Please check your SSH key and try again."
-            fi
-        fi
-    else
-        echo "$YELLOW WARN $DEFAULT SSH_AGENT_PID variable does not exist"
     fi
 else
-    echo "$GREEN OK $DEFAULT SSH agent has keys loaded"
+    start_agent
 fi
 
 
