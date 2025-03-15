@@ -16,3 +16,31 @@ print_warn (){
 print_crit (){
     echo "$RED CRITICAL $DEFAULT ${1}"
 }
+
+# Function to set up Ghostty terminal
+setup_ghostty() {
+    export TERM=xterm-256color
+    export COLORTERM=truecolor
+    
+    # Enable OSC 52 clipboard support for Ghostty
+    export GHOSTTY_RESOURCES_DIR=${GHOSTTY_RESOURCES_DIR:-"$HOME/.config/ghostty"}
+    
+    # Create Ghostty config directory if it doesn't exist
+    if [[ ! -d "$GHOSTTY_RESOURCES_DIR" ]]; then
+        mkdir -p "$GHOSTTY_RESOURCES_DIR"
+        echo "$GREEN OK $DEFAULT Created Ghostty config directory at $GHOSTTY_RESOURCES_DIR"
+    fi
+    
+    # Enable OSC 52 clipboard integration
+    export GHOSTTY_ENABLE_CLIPBOARD=1
+    
+    # If using tmux, ensure proper color support
+    if [[ -n "$TMUX" ]]; then
+        tmux set-option -ga terminal-overrides ",xterm-256color:Tc"
+    fi
+    
+    # If this is an SSH session, print a message
+    if [[ -n "$SSH_CONNECTION" ]]; then
+        echo "$GREEN OK $DEFAULT Ghostty terminal configured for remote session"
+    fi
+}

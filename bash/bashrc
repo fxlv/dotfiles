@@ -152,7 +152,12 @@ elif [ "$OSTYPE" == "linux-gnu" ]; then
     else
         print_warn "Please consider installing 'most' or 'less'"
     fi
-elif [ "$OSTYPE" == "darwin18" ]; then
+    
+    # Add Ghostty terminal support for Linux
+    if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
+        setup_ghostty
+    fi
+elif [[ "$OSTYPE" == darwin* ]]; then
     if [ -x /usr/local/bin/most ]; then
         export PAGER=most
     elif [ -x /usr/bin/less ]; then
@@ -160,7 +165,13 @@ elif [ "$OSTYPE" == "darwin18" ]; then
     else
         print_warn "Please consider installing 'most' or 'less'"
     fi
+
+    if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
+        setup_ghostty
+    fi
 fi
+
+
 export HISTFILESIZE HISTSIZE HISTTIMEFORMAT PS1
 # some basic env variables
 export VAGRANT_DEFAULT_PROVIDER=virtualbox
@@ -250,6 +261,19 @@ fi
 # end of tty conditional
 fi
 
+# Add Ghostty terminal detection for SSH sessions
+if [[ -n "$SSH_CONNECTION" && "$TERM_PROGRAM" == "ghostty" ]]; then
+    # We're in an SSH session with Ghostty terminal
+    if type setup_ghostty > /dev/null 2>&1; then
+        setup_ghostty
+    else
+        # Fallback if the function isn't available
+        export TERM=xterm-256color
+        export COLORTERM=truecolor
+        echo "$GREEN OK $DEFAULT Detected Ghostty terminal over SSH"
+    fi
+fi
+
 if [ -e /home/fx/.config/broot ]; then
     source /home/fx/.config/broot/launcher/bash/br
 else
@@ -268,6 +292,9 @@ fi
 
 
 eval "$(oh-my-posh --init --shell bash --config ~/.fxposh.json)"
+
+eval "$(starship init bash)"
+
 . "$HOME/.cargo/env"
 
 if [ -e $HOME/opt/bin/direnv ]; then

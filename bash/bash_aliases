@@ -18,3 +18,32 @@ fi
 
 alias ll='/bin/ls -lashG'
 alias ds='dstat -lcidmnpryt'
+
+
+# Function to set up Ghostty on remote systems
+setup_remote_ghostty() {
+    local remote_host="$1"
+    
+    if [[ -z "$remote_host" ]]; then
+        echo "Usage: setup_remote_ghostty <remote_host>"
+        return 1
+    fi
+    
+    if [[ "$TERM_PROGRAM" != "ghostty" ]]; then
+        echo "Error: Not running in a Ghostty terminal."
+        return 1
+    fi
+    
+    echo "Setting up Ghostty on remote host: $remote_host"
+    
+    # Copy the setup script to the remote host
+    scp "$HOME/git/github/dotfiles/bash/ghostty_setup.sh" "$remote_host:~/"
+    
+    # Execute the setup script on the remote host
+    ssh "$remote_host" "chmod +x ~/ghostty_setup.sh && ~/ghostty_setup.sh && rm ~/ghostty_setup.sh"
+    
+    echo "Ghostty setup on $remote_host complete!"
+}
+
+# Alias for the function
+alias ghostty-setup=setup_remote_ghostty

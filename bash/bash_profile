@@ -13,3 +13,6 @@ fi
 echo
 uptime
 
+. "$HOME/.cargo/env"
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
