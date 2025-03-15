@@ -51,48 +51,38 @@ fi
 
 [ -f /usr/local/bin/kubectl ] && source <(kubectl completion bash)
 
-# set up the environment in a docker container or WSL session
-boot2docker=$(uname -r |grep -c docker) # docker
-moby=$(uname -r |grep -c moby) # docker
-wsl=$(uname -r | grep -c WSL) # Windows Subsystem for Linux
-if (( boot2docker == 1 || moby == 1 || wsl == 1)); then
-    echo "Environment recognized, great stuff."
-    echo "Setting locale: LC_ALL=C"
-    export LC_ALL=C
-    
-    # check if ssh-agent is already running, if not, start one up
-    if pgrep ssh-agent > /dev/null 2>&1; then
-        echo "ssh-agent already running"
-        source ~/.ssh-agent.env
+# Ensure en_US.UTF-8 locale is always available and configured
+ensure_utf8_locale() {
+    local LOCALE="en_US.UTF-8"
+    if ! locale -a | grep -qi "$(echo ${LOCALE} | sed 's/-//')"; then
+        echo "Locale ${LOCALE} missing."
+        read -p "Do you want to generate ${LOCALE}? [y/N]: " confirm
+        if [[ ! $confirm =~ ^[Yy]$ ]]; then
+            echo "Locale generation aborted."
+            return
+        fi
+
+        if [ -x "$(command -v locale-gen)" ]; then
+            sudo locale-gen ${LOCALE}
+        elif [ -x "$(command -v localedef)" ]; then
+            sudo localedef -v -c -i en_US -f UTF-8 ${LOCALE}
+        else
+            echo "No supported locale generation command found (locale-gen/localedef)."
+            return
+        fi
+
+        echo "Locale ${LOCALE} generated."
     else
-        if [ -S ~/.ssh-agent.sock ]; then
-            echo "ssh-agent socket exists but agent itself not running"
-            echo -n "removing old ssh-agent socket "
-            rm -v ~/.ssh-agent.sock
-        fi
-        echo "Starting ssh-agent"
-        ssh-agent -a ~/.ssh-agent.sock > ~/.ssh-agent.env
-        if pgrep ssh-agent > /dev/null 2>&1; then
-            source ~/.ssh-agent.env
-            echo "Please add your key"
-            ssh-add
-        else
-            echo "Could not start ssh-agent"
-        fi
+        echo "Locales are OK: ${LOCALE} is already configured."
     fi
-else
-    if [ "$OSTYPE" == "linux-gnu" ] || [ "$OSTYPE" == "linux-gnueabihf" ]; then
-        # shellcheck disable=SC2030
-        locale_output=$(export LC_ALL=en_US.UTF-8 2>&1 | wc -l)
-        if ((locale_output > 0)); then
-            # shellcheck disable=SC2031
-            echo "$YELLOW WARN $DEFAULT Are you missing locales? Consider updating '/etc/locale.gen' by adding 'en_US.UTF-8 UTF-8' and then running 'sudo locale-gen $LC_ALL'"
-        else
-            echo "$GREEN OK $DEFAULT locale set to en_US.UTF-8"
-        fi
-        export LANG=en_US.UTF-8
-    fi
-fi
+    export LANG=${LOCALE}
+    export LOCALE=${LOCALE}
+    unset LC_ALL
+}
+
+ensure_utf8_locale
+
+
 
 # common settings
 # big hist file is good for lazy (or forgetful) admins
@@ -181,49 +171,34 @@ export EDITOR="vim"
 
 
 
+SSH_ENV="$HOME/.ssh/environment"
 
-ssh-add -l
-if [ "$?" != 0 ]; then
-    echo "$YELLOW WARN $DEFAULT SSH agent has no keys loaded."
-    
+function start_agent {
+    echo -e "${YELLOW}Starting new ssh-agent${DEFAULT}"
+    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    chmod 600 "${SSH_ENV}"
+    . "${SSH_ENV}" > /dev/null
+    /usr/bin/ssh-add
+}
 
-    # make sure ssh-agent is running and is being used
-    if ! pgrep ssh-agent > /dev/null 2>&1; then
-        echo "$YELLOW WARN $DEFAULT ssh agent not running, let's start it up"
-        eval $(ssh-agent -s)
+# Source SSH settings if they exist
+if [ -f "${SSH_ENV}" ]; then
+    . "${SSH_ENV}" > /dev/null
+    # Check if agent is running
+    if ! kill -0 "$SSH_AGENT_PID" 2>/dev/null; then
+        echo -e "${YELLOW}Stale ssh-agent found. Restarting...${DEFAULT}"
+        start_agent
     else
-        # There should be only one ssh-agent running
-        ssh_agent_count=$(pgrep -x ssh-agent | wc -l)
-        if (( ssh_agent_count > 1)); then
-            echo "$YELLOW WARN $DEFAULT Too many ssh agents running!"
+        # Agent is running, check if keys are loaded
+        if ssh-add -l > /dev/null 2>&1; then
+            echo -e "${GREEN}OK${DEFAULT} SSH agent running and keys loaded."
         else
-            export SSH_AGENT_PID=$(pgrep ssh-agent)
-        fi
-    fi 
-
-    if [ -e "$SSH_AUTH_SOCK" ]; then
-        if [[ -e ~/.ssh/ssh_auth_sock ]]; then 
-            echo "$GREEN OK $DEFAULT SSH_AUTH_SOCK is OK"
-        else
-            echo "Setting up SSH_AUTH_SOCK"
-            ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
-        fi
-    fi
-
-
-
-    if [ -n "$SSH_AGENT_PID" ]; then
-        if ssh-add -L > /dev/null; then
-            echo "$GREEN OK $DEFAULT SSH key already loaded"
-        else
-        echo "Adding ssh key to ssh-agent"
+            echo -e "${YELLOW}WARN${DEFAULT} No SSH keys loaded. Loading now."
             ssh-add
         fi
-    else
-        echo "$YELLOW WARN $DEFAULT SSH_AGENT_PID variable does not exist"
     fi
 else
-    echo "$GREEN OK $DEFAULT SSH agent has keys loaded"
+    start_agent
 fi
 
 
@@ -289,16 +264,19 @@ if [ -e $HOME/.extrarc ]; then
     . "$HOME/.extrarc"
 fi
 
-
-
 eval "$(oh-my-posh --init --shell bash --config ~/.fxposh.json)"
 
 eval "$(starship init bash)"
 
 . "$HOME/.cargo/env"
 
-if [ -e $HOME/opt/bin/direnv ]; then
+if [ -e $HOME/opt/bin/direnv ] || [ -e /usr/bin/direnv ]; then
     echo "Direnv is present"
-eval "$(direnv hook bash)"
+    eval "$(direnv hook bash)"
 fi
 
+if [ -e /etc/bash_completion.d/azure-cli ]; then
+    source /etc/bash_completion.d/azure-cli
+else
+    echo "$YELLOW WARN $DEFAULT >>> Azure CLI bash completion not found"
+fi
