@@ -13,6 +13,14 @@ fi
 echo
 uptime
 
-. "$HOME/.cargo/env"
+# Load cargo environment if available
+if [ -e "$HOME/.cargo/env" ]; then
+    . "$HOME/.cargo/env" 2>/dev/null
+fi
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
+# Load Homebrew if it exists (primarily for macOS)
+if [ -x "/opt/homebrew/bin/brew" ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x "/usr/local/bin/brew" ]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
