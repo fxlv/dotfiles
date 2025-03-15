@@ -4,6 +4,25 @@
 # to avoid breaking SCP transfers only apply .bashrc to interactive sessions
 if tty -s; then
 
+# Create arrays to track missing tools and warnings
+MISSING_TOOLS=()
+WARNINGS=()
+
+# Function to check if a command exists
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+# Function to add a missing tool to the list
+add_missing_tool() {
+    MISSING_TOOLS+=("$1")
+}
+
+# Function to add a warning message
+add_warning() {
+    WARNINGS+=("$1")
+}
+
 if [ -e "$HOME/.colors" ]; then
     source "$HOME/.colors"
 fi
@@ -28,10 +47,10 @@ elif [ -d "${HOME}/github" ]; then
      GITHUB_DIRECTORY=${HOME}/github
      echo "$GREEN OK $DEFAULT GitHub directory found at: ${GITHUB_DIRECTORY}"
 elif [ -d "${HOME}/git/github" ]; then
-     GITHUB_DIRECTORY=${HOME}/github
+     GITHUB_DIRECTORY=${HOME}/git/github
      echo "$GREEN OK $DEFAULT GitHub directory found at: ${GITHUB_DIRECTORY}"
 else 
-    echo "$YELLOW WARN $DEFAULT Could not find your github directory. This is sub optimal."
+    add_warning "Could not find your github directory"
 fi
 
 if [ -e "$HOME/.ansiblerc" ]; then
@@ -49,7 +68,9 @@ fi
 # brew install bash-completion
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 
-[ -f /usr/local/bin/kubectl ] && source <(kubectl completion bash)
+if command_exists kubectl; then
+    source <(kubectl completion bash 2>/dev/null)
+fi
 
 # Ensure en_US.UTF-8 locale is always available and configured
 ensure_utf8_locale() {
@@ -81,8 +102,6 @@ ensure_utf8_locale() {
 }
 
 ensure_utf8_locale
-
-
 
 # common settings
 # big hist file is good for lazy (or forgetful) admins
@@ -118,12 +137,6 @@ if [ -d "/opt/bin" ]; then
     PATH=/opt/bin:$PATH
 fi
 
-# if it exists, add ${HOME}/opt/bin to path 
-if [ -d "${HOME}/opt/bin" ]; then
-    PATH=${HOME}/opt/bin:$PATH
-fi
-
-
 export PATH
 
 if [ "$OSTYPE" == "freebsd11.0" ] || [ "$OSTYPE" == "freebsd10.1" ]; then
@@ -132,7 +145,7 @@ if [ "$OSTYPE" == "freebsd11.0" ] || [ "$OSTYPE" == "freebsd10.1" ]; then
     elif [ -x /usr/bin/less ]; then
         export PAGER=less
     else
-        print_warn "Please consider installing 'most' or 'less'"
+        add_warning "Please consider installing 'most' or 'less'"
     fi
 elif [ "$OSTYPE" == "linux-gnu" ]; then
     if [ -x /usr/bin/most ]; then
@@ -140,12 +153,16 @@ elif [ "$OSTYPE" == "linux-gnu" ]; then
     elif [ -x /usr/bin/less ]; then
         export PAGER=less
     else
-        print_warn "Please consider installing 'most' or 'less'"
+        add_warning "Please consider installing 'most' or 'less'"
     fi
     
     # Add Ghostty terminal support for Linux
     if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
-        setup_ghostty
+        if command_exists setup_ghostty; then
+            setup_ghostty
+        else
+            add_warning "Ghostty terminal detected but setup_ghostty function not found"
+        fi
     fi
 elif [[ "$OSTYPE" == darwin* ]]; then
     if [ -x /usr/local/bin/most ]; then
@@ -153,23 +170,22 @@ elif [[ "$OSTYPE" == darwin* ]]; then
     elif [ -x /usr/bin/less ]; then
         export PAGER=less
     else
-        print_warn "Please consider installing 'most' or 'less'"
+        add_warning "Please consider installing 'most' or 'less'"
     fi
 
     if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
-        setup_ghostty
+        if command_exists setup_ghostty; then
+            setup_ghostty
+        else
+            add_warning "Ghostty terminal detected but setup_ghostty function not found"
+        fi
     fi
 fi
-
 
 export HISTFILESIZE HISTSIZE HISTTIMEFORMAT PS1
 # some basic env variables
 export VAGRANT_DEFAULT_PROVIDER=virtualbox
 export EDITOR="vim"
-
-
-
-
 
 SSH_ENV="$HOME/.ssh/environment"
 
@@ -201,10 +217,8 @@ else
     start_agent
 fi
 
-
-
 # setup golang environment
-if type go > /dev/null 2> /dev/null; then
+if command_exists go; then
     export GOPATH=$HOME/golang
     if [ ! -e "$GOPATH" ]; then
         echo "Your GOPATH is missing, so I will create it"
@@ -213,15 +227,12 @@ if type go > /dev/null 2> /dev/null; then
     echo "Setting up \$GOPATH to $GOPATH"
 fi
 
-
 if [ -e "$HOME/.bash_mac" ]; then
     source "$HOME/.bash_mac"
     print_ok ".bash_mac loaded"
 fi
 
-
-
-chmod -v 0640 ~/.ssh/config
+chmod -v 0640 ~/.ssh/config 2>/dev/null
 mkdir -p  ~/.ssh/cm/
 
 # check if sudo session is already active
@@ -230,16 +241,13 @@ if sudo -vn 2> /dev/null; then
     echo "You have an active sudo session"
 fi
 
-
-
-
 # end of tty conditional
 fi
 
 # Add Ghostty terminal detection for SSH sessions
 if [[ -n "$SSH_CONNECTION" && "$TERM_PROGRAM" == "ghostty" ]]; then
     # We're in an SSH session with Ghostty terminal
-    if type setup_ghostty > /dev/null 2>&1; then
+    if command_exists setup_ghostty; then
         setup_ghostty
     else
         # Fallback if the function isn't available
@@ -249,34 +257,60 @@ if [[ -n "$SSH_CONNECTION" && "$TERM_PROGRAM" == "ghostty" ]]; then
     fi
 fi
 
-if [ -e /home/fx/.config/broot ]; then
-    source /home/fx/.config/broot/launcher/bash/br
+# Load broot if available
+if [ -e "$HOME/.config/broot/launcher/bash/br" ]; then
+    source "$HOME/.config/broot/launcher/bash/br"
 else
-    echo "$YELLOW WARN $DEFAULT >>> Install broot from https://github.com/Canop/broot"
+    add_missing_tool "broot"
 fi
 
-
-if [ -e $HOME/.cargo/env ]; then 
-    . "$HOME/.cargo/env"
+# Load cargo environment if available
+if [ -e "$HOME/.cargo/env" ]; then 
+    . "$HOME/.cargo/env" 2>/dev/null
+else
+    add_missing_tool "cargo"
 fi
 
-if [ -e $HOME/.extrarc ]; then 
+if [ -e "$HOME/.extrarc" ]; then 
     . "$HOME/.extrarc"
 fi
 
-eval "$(oh-my-posh --init --shell bash --config ~/.fxposh.json)"
-
-eval "$(starship init bash)"
-
-. "$HOME/.cargo/env"
-
-if [ -e $HOME/opt/bin/direnv ] || [ -e /usr/bin/direnv ]; then
-    echo "Direnv is present"
-    eval "$(direnv hook bash)"
+# Load oh-my-posh if available
+if command_exists oh-my-posh; then
+    eval "$(oh-my-posh --init --shell bash --config ~/.fxposh.json)"
+else
+    add_missing_tool "oh-my-posh"
 fi
 
-if [ -e /etc/bash_completion.d/azure-cli ]; then
+# Load starship if available
+if command_exists starship; then
+    eval "$(starship init bash)"
+else
+    add_missing_tool "starship"
+fi
+
+# Load direnv if available
+if [ -e "$HOME/opt/bin/direnv" ] || [ -e "/usr/bin/direnv" ] || command_exists direnv; then
+    eval "$(direnv hook bash 2>/dev/null)"
+else
+    add_missing_tool "direnv"
+fi
+
+# Load Azure CLI completion if available
+if [ -e "/etc/bash_completion.d/azure-cli" ]; then
     source /etc/bash_completion.d/azure-cli
 else
-    echo "$YELLOW WARN $DEFAULT >>> Azure CLI bash completion not found"
+    add_missing_tool "azure-cli"
+fi
+
+# Display a summary of missing tools at the end
+if [ ${#MISSING_TOOLS[@]} -gt 0 ]; then
+    echo -e "${YELLOW}Missing tools:${DEFAULT} ${MISSING_TOOLS[*]}"
+fi
+
+if [ ${#WARNINGS[@]} -gt 0 ]; then
+    echo -e "${YELLOW}Warnings:${DEFAULT}"
+    for warning in "${WARNINGS[@]}"; do
+        echo "  - $warning"
+    done
 fi
