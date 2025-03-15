@@ -197,25 +197,83 @@ function start_agent {
     /usr/bin/ssh-add
 }
 
-# Source SSH settings if they exist
-if [ -f "${SSH_ENV}" ]; then
-    . "${SSH_ENV}" > /dev/null
-    # Check if agent is running
-    if ! kill -0 "$SSH_AGENT_PID" 2>/dev/null; then
-        echo -e "${YELLOW}Stale ssh-agent found. Restarting...${DEFAULT}"
-        start_agent
+function ssh_agent_status {
+    echo -e "${BLUE}SSH Agent Status:${DEFAULT}"
+    echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK"
+    echo "SSH_AGENT_PID=$SSH_AGENT_PID"
+    echo "SSH_CONNECTION=$SSH_CONNECTION"
+    
+    if [[ -n "$SSH_AUTH_SOCK" && -S "$SSH_AUTH_SOCK" ]]; then
+        echo -e "${GREEN}Socket exists${DEFAULT}"
+        ssh-add -l
     else
-        # Agent is running, check if keys are loaded
-        if ssh-add -l > /dev/null 2>&1; then
-            echo -e "${GREEN}OK${DEFAULT} SSH agent running and keys loaded."
+        echo -e "${RED}No valid SSH_AUTH_SOCK${DEFAULT}"
+    fi
+    
+    if [ -f "${SSH_ENV}" ]; then
+        echo -e "${GREEN}Environment file exists${DEFAULT}"
+        grep -v "^#" "${SSH_ENV}"
+    else
+        echo -e "${RED}No environment file${DEFAULT}"
+    fi
+}
+
+# Improved SSH agent handling
+# First check if we have a forwarded agent (SSH_AUTH_SOCK exists and is valid)
+if [[ -n "$SSH_AUTH_SOCK" && -S "$SSH_AUTH_SOCK" ]]; then
+    # We have a forwarded agent socket
+    if ssh-add -l &>/dev/null; then
+        echo -e "${GREEN}OK${DEFAULT} Using forwarded SSH agent with keys."
+    else
+        # Exit code 1 means agent exists but has no keys
+        # Exit code 2 means agent is not running or not accessible
+        if [ $? -eq 1 ]; then
+            echo -e "${YELLOW}WARN${DEFAULT} Using forwarded SSH agent (no keys)."
         else
-            echo -e "${YELLOW}WARN${DEFAULT} No SSH keys loaded. Loading now."
-            ssh-add
+            echo -e "${YELLOW}WARN${DEFAULT} SSH_AUTH_SOCK exists but agent not responding. Clearing variable."
+            unset SSH_AUTH_SOCK
         fi
     fi
-else
-    start_agent
 fi
+
+# If no forwarded agent is working, try to use or start a local agent
+if [[ -z "$SSH_AUTH_SOCK" || ! -S "$SSH_AUTH_SOCK" ]]; then
+    # Source SSH settings if they exist
+    if [ -f "${SSH_ENV}" ]; then
+        . "${SSH_ENV}" > /dev/null
+        # Check if agent is running
+        if ! kill -0 "$SSH_AGENT_PID" 2>/dev/null; then
+            echo -e "${YELLOW}Stale ssh-agent found. Restarting...${DEFAULT}"
+            start_agent
+        else
+            # Agent is running, check if keys are loaded
+            if ssh-add -l &>/dev/null; then
+                echo -e "${GREEN}OK${DEFAULT} Local SSH agent running with keys."
+            else
+                # Exit code 1 means agent exists but has no keys
+                # Exit code 2 means agent is not running or not accessible
+                if [ $? -eq 1 ]; then
+                    echo -e "${YELLOW}WARN${DEFAULT} Local SSH agent has no keys. Loading now."
+                    ssh-add
+                else
+                    echo -e "${RED}ERROR${DEFAULT} Local SSH agent not responding properly."
+                fi
+            fi
+        fi
+    else
+        # No agent environment file exists
+        if [[ -z "$SSH_CONNECTION" ]]; then
+            # Only start a new agent if we're not in an SSH session
+            start_agent
+        else
+            echo -e "${YELLOW}WARN${DEFAULT} SSH forwarding not working. No local agent started in SSH session."
+            echo -e "       Try reconnecting with 'ssh -A' for agent forwarding."
+        fi
+    fi
+fi
+
+# If you need to troubleshoot SSH agent issues, run the ssh_agent_status function
+# ssh_agent_status
 
 # setup golang environment
 if command_exists go; then
