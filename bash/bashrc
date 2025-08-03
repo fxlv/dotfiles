@@ -75,7 +75,7 @@ fi
 # Ensure en_US.UTF-8 locale is always available and configured
 ensure_utf8_locale() {
     local LOCALE="en_US.UTF-8"
-    if ! locale -a | grep -qi "$(echo ${LOCALE} | sed 's/-//')"; then
+    if ! locale -a | grep -qi "${LOCALE}"; then
         echo "Locale ${LOCALE} missing."
         read -p "Do you want to generate ${LOCALE}? [y/N]: " confirm
         if [[ ! $confirm =~ ^[Yy]$ ]]; then
