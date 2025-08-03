@@ -13,10 +13,7 @@ fi
 echo
 uptime
 
-# Load cargo environment if available
-if [ -e "$HOME/.cargo/env" ]; then
-    . "$HOME/.cargo/env" 2>/dev/null
-fi
+# Cargo environment is loaded in .bashrc
 
 # Load Homebrew if it exists (primarily for macOS)
 if [ -x "/opt/homebrew/bin/brew" ]; then

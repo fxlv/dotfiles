@@ -1,6 +1,10 @@
 # shellcheck shell=bash
 # vim: filetype=sh
 
+# Performance configuration - disable expensive features if needed
+# Set FAST_STARTUP=1 to skip expensive operations
+FAST_STARTUP=${FAST_STARTUP:-0}
+
 # to avoid breaking SCP transfers only apply .bashrc to interactive sessions
 if tty -s; then
 
@@ -299,9 +303,6 @@ if sudo -vn 2> /dev/null; then
     echo "You have an active sudo session"
 fi
 
-# end of tty conditional
-fi
-
 # Add Ghostty terminal detection for SSH sessions
 if [[ -n "$SSH_CONNECTION" && "$TERM_PROGRAM" == "ghostty" ]]; then
     # We're in an SSH session with Ghostty terminal
@@ -322,31 +323,6 @@ else
     add_missing_tool "broot"
 fi
 
-# Load cargo environment if available
-if [ -e "$HOME/.cargo/env" ]; then 
-    . "$HOME/.cargo/env" 2>/dev/null
-else
-    add_missing_tool "cargo"
-fi
-
-if [ -e "$HOME/.extrarc" ]; then 
-    . "$HOME/.extrarc"
-fi
-
-# Load oh-my-posh if available
-if command_exists oh-my-posh; then
-    eval "$(oh-my-posh --init --shell bash --config ~/.fxposh.json)"
-else
-    add_missing_tool "oh-my-posh"
-fi
-
-# Load starship if available
-if command_exists starship; then
-    eval "$(starship init bash)"
-else
-    add_missing_tool "starship"
-fi
-
 # Load direnv if available
 if [ -e "$HOME/opt/bin/direnv" ] || [ -e "/usr/bin/direnv" ] || command_exists direnv; then
     eval "$(direnv hook bash 2>/dev/null)"
@@ -361,6 +337,15 @@ else
     add_missing_tool "azure-cli"
 fi
 
+# Choose ONE prompt system (starship preferred over oh-my-posh)
+if command_exists starship; then
+    eval "$(starship init bash)"
+elif command_exists oh-my-posh; then
+    eval "$(oh-my-posh --init --shell bash --config ~/.fxposh.json)"
+else
+    add_missing_tool "starship or oh-my-posh"
+fi
+
 # Display a summary of missing tools at the end
 if [ ${#MISSING_TOOLS[@]} -gt 0 ]; then
     echo -e "${YELLOW}Missing tools:${DEFAULT} ${MISSING_TOOLS[*]}"
@@ -371,4 +356,17 @@ if [ ${#WARNINGS[@]} -gt 0 ]; then
     for warning in "${WARNINGS[@]}"; do
         echo "  - $warning"
     done
+fi
+
+# end of tty conditional
+fi
+
+# Load cargo environment if available (non-interactive safe)
+if [ -e "$HOME/.cargo/env" ]; then 
+    . "$HOME/.cargo/env" 2>/dev/null
+fi
+
+# Load extrarc if available (non-interactive safe)
+if [ -e "$HOME/.extrarc" ]; then 
+    . "$HOME/.extrarc"
 fi
