@@ -79,27 +79,54 @@ fi
 # Ensure en_US.UTF-8 locale is always available and configured
 ensure_utf8_locale() {
     local LOCALE="en_US.UTF-8"
+    
+    # Check if locale exists
     if ! locale -a | grep -qi "${LOCALE}"; then
-        echo "Locale ${LOCALE} missing."
-        read -p "Do you want to generate ${LOCALE}? [y/N]: " confirm
-        if [[ ! $confirm =~ ^[Yy]$ ]]; then
-            echo "Locale generation aborted."
-            return
-        fi
-
-        if [ -x "$(command -v locale-gen)" ]; then
-            sudo locale-gen ${LOCALE}
-        elif [ -x "$(command -v localedef)" ]; then
-            sudo localedef -v -c -i en_US -f UTF-8 ${LOCALE}
+        # Try fallback locales that are commonly available
+        local fallback_locales=("C.UTF-8" "en_US.utf8" "POSIX")
+        local found_fallback=""
+        
+        for fallback in "${fallback_locales[@]}"; do
+            if locale -a | grep -qi "${fallback}"; then
+                found_fallback="${fallback}"
+                break
+            fi
+        done
+        
+        if [[ -n "$found_fallback" ]]; then
+            echo "Locale ${LOCALE} missing, using fallback: ${found_fallback}"
+            LOCALE="$found_fallback"
         else
-            echo "No supported locale generation command found (locale-gen/localedef)."
-            return
-        fi
+            # Only prompt in interactive sessions with a tty
+            if [[ $- == *i* ]] && [[ -t 0 ]]; then
+                echo "Locale ${LOCALE} missing."
+                read -p "Do you want to generate ${LOCALE}? [y/N]: " confirm
+                if [[ ! $confirm =~ ^[Yy]$ ]]; then
+                    echo "Locale generation aborted, using POSIX."
+                    LOCALE="POSIX"
+                    export LANG=${LOCALE}
+                    export LOCALE=${LOCALE}
+                    unset LC_ALL
+                    return
+                fi
 
-        echo "Locale ${LOCALE} generated."
-    else
-        echo "Locales are OK: ${LOCALE} is already configured."
+                if [ -x "$(command -v locale-gen)" ]; then
+                    sudo locale-gen ${LOCALE}
+                elif [ -x "$(command -v localedef)" ]; then
+                    sudo localedef -v -c -i en_US -f UTF-8 ${LOCALE}
+                else
+                    echo "No supported locale generation command found (locale-gen/localedef)."
+                    echo "Using POSIX locale as fallback."
+                    LOCALE="POSIX"
+                fi
+            else
+                # Non-interactive session, use POSIX as safe fallback
+                echo "Locale ${LOCALE} missing in non-interactive session, using POSIX fallback."
+                LOCALE="POSIX"
+            fi
+        fi
     fi
+    
     export LANG=${LOCALE}
     export LOCALE=${LOCALE}
     unset LC_ALL
