@@ -80,26 +80,39 @@ fi
 ensure_utf8_locale() {
     local LOCALE="en_US.UTF-8"
     
-    # Check if locale exists
-    if ! locale -a | grep -qi "${LOCALE}"; then
+    # Get available locales once, suppressing error messages
+    local available_locales
+    available_locales=$(locale -a 2>/dev/null | tr '[:upper:]' '[:lower:]')
+    
+    # Check if preferred locale exists (case insensitive)
+    if ! echo "$available_locales" | grep -qi "$(echo "$LOCALE" | tr '[:upper:]' '[:lower:]')"; then
         # Try fallback locales that are commonly available
-        local fallback_locales=("C.UTF-8" "en_US.utf8" "POSIX")
+        local fallback_locales=("C.UTF-8" "en_US.utf8" "C.utf8" "POSIX")
         local found_fallback=""
         
         for fallback in "${fallback_locales[@]}"; do
-            if locale -a | grep -qi "${fallback}"; then
-                found_fallback="${fallback}"
+            if echo "$available_locales" | grep -qi "$(echo "$fallback" | tr '[:upper:]' '[:lower:]')"; then
+                # Get the actual case from the system
+                found_fallback=$(echo "$available_locales" | grep -i "$(echo "$fallback" | tr '[:upper:]' '[:lower:]')" | head -n1)
+                # Restore proper case if it's a standard locale
+                case "$found_fallback" in
+                    *utf-8*|*utf8*) found_fallback="C.UTF-8" ;;
+                    *posix*) found_fallback="POSIX" ;;
+                esac
                 break
             fi
         done
         
         if [[ -n "$found_fallback" ]]; then
-            echo "Locale ${LOCALE} missing, using fallback: ${found_fallback}"
+            # Only show message if we're switching from the preferred locale
+            if [[ "$found_fallback" != "$LOCALE" ]]; then
+                echo "Locale ${LOCALE} not available, using: ${found_fallback}"
+            fi
             LOCALE="$found_fallback"
         else
             # Only prompt in interactive sessions with a tty
             if [[ $- == *i* ]] && [[ -t 0 ]]; then
-                echo "Locale ${LOCALE} missing."
+                echo "Locale ${LOCALE} missing and no UTF-8 fallbacks found."
                 read -p "Do you want to generate ${LOCALE}? [y/N]: " confirm
                 if [[ ! $confirm =~ ^[Yy]$ ]]; then
                     echo "Locale generation aborted, using POSIX."
@@ -121,7 +134,7 @@ ensure_utf8_locale() {
                 fi
             else
                 # Non-interactive session, use POSIX as safe fallback
-                echo "Locale ${LOCALE} missing in non-interactive session, using POSIX fallback."
+                echo "No UTF-8 locale available, using POSIX fallback."
                 LOCALE="POSIX"
             fi
         fi
