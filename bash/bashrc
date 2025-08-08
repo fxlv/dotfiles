@@ -401,6 +401,11 @@ fi
 # end of tty conditional
 fi
 
+# Load NVM (Node Version Manager) if available (non-interactive safe)
+if [ -s "$HOME/.nvm/nvm.sh" ]; then
+    . "$HOME/.nvm/nvm.sh" 2>/dev/null
+fi
+
 # Load cargo environment if available (non-interactive safe)
 if [ -e "$HOME/.cargo/env" ]; then 
     . "$HOME/.cargo/env" 2>/dev/null
