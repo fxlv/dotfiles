@@ -263,9 +263,8 @@ function ssh_agent_status {
 }
 
 # Improved SSH agent handling
-# First check if we have a forwarded agent (SSH_AUTH_SOCK exists and is valid)
-if [[ -n "$SSH_AUTH_SOCK" && -S "$SSH_AUTH_SOCK" ]]; then
-    # We have a forwarded agent socket
+# If we're in an SSH session, treat a valid SSH_AUTH_SOCK as forwarded.
+if [[ -n "$SSH_CONNECTION" && -n "$SSH_AUTH_SOCK" && -S "$SSH_AUTH_SOCK" ]]; then
     if ssh-add -l &>/dev/null; then
         echo -e "${GREEN}OK${DEFAULT} Using forwarded SSH agent with keys."
     else
@@ -274,8 +273,24 @@ if [[ -n "$SSH_AUTH_SOCK" && -S "$SSH_AUTH_SOCK" ]]; then
         if [ $? -eq 1 ]; then
             echo -e "${YELLOW}WARN${DEFAULT} Using forwarded SSH agent (no keys)."
         else
-            echo -e "${YELLOW}WARN${DEFAULT} SSH_AUTH_SOCK exists but agent not responding. Clearing variable."
+            echo -e "${YELLOW}WARN${DEFAULT} SSH_AUTH_SOCK exists but agent not responding. Clearing variables."
             unset SSH_AUTH_SOCK
+            unset SSH_AGENT_PID
+        fi
+    fi
+elif [[ -n "$SSH_AUTH_SOCK" && -S "$SSH_AUTH_SOCK" ]]; then
+    # Local session: prefer to load keys into the existing agent
+    if ssh-add -l &>/dev/null; then
+        echo -e "${GREEN}OK${DEFAULT} Local SSH agent running with keys."
+    else
+        if [ $? -eq 1 ]; then
+            echo -e "${YELLOW}WARN${DEFAULT} Local SSH agent has no keys. Loading now."
+            ssh-add
+        else
+            echo -e "${YELLOW}WARN${DEFAULT} Local SSH agent not responding. Restarting..."
+            unset SSH_AUTH_SOCK
+            unset SSH_AGENT_PID
+            start_agent
         fi
     fi
 fi
@@ -285,6 +300,11 @@ if [[ -z "$SSH_AUTH_SOCK" || ! -S "$SSH_AUTH_SOCK" ]]; then
     # Source SSH settings if they exist
     if [ -f "${SSH_ENV}" ]; then
         . "${SSH_ENV}" > /dev/null
+        # Ensure the sourced socket is valid before trusting the PID
+        if [[ -z "$SSH_AUTH_SOCK" || ! -S "$SSH_AUTH_SOCK" ]]; then
+            echo -e "${YELLOW}Stale SSH_AUTH_SOCK found after sourcing. Restarting...${DEFAULT}"
+            start_agent
+        fi
         # Check if agent is running
         if ! kill -0 "$SSH_AGENT_PID" 2>/dev/null; then
             echo -e "${YELLOW}Stale ssh-agent found. Restarting...${DEFAULT}"
@@ -300,7 +320,8 @@ if [[ -z "$SSH_AUTH_SOCK" || ! -S "$SSH_AUTH_SOCK" ]]; then
                     echo -e "${YELLOW}WARN${DEFAULT} Local SSH agent has no keys. Loading now."
                     ssh-add
                 else
-                    echo -e "${RED}ERROR${DEFAULT} Local SSH agent not responding properly."
+                    echo -e "${RED}ERROR${DEFAULT} Local SSH agent not responding properly. Restarting..."
+                    start_agent
                 fi
             fi
         fi
